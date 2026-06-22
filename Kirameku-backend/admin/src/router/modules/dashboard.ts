@@ -9,7 +9,8 @@ export default {
   meta: {
     icon: "ri:dashboard-3-line",
     title: "仪表盘",
-    rank: dashboard
+    rank: dashboard,
+    showLink: false
   },
   children: [
     {
