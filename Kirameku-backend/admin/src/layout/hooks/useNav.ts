@@ -86,12 +86,15 @@ export function useNav() {
   });
 
   const title = computed(() => {
-    return $config.Title;
+    const rawTitle = $config?.Title?.trim?.();
+    if (!rawTitle || rawTitle === "Kirameku") return "小羊与小猪";
+    return rawTitle;
   });
 
   /** 动态title */
   function changeTitle(meta: routeMetaType) {
-    const Title = getConfig().Title;
+    const rawTitle = getConfig().Title?.trim?.();
+    const Title = !rawTitle || rawTitle === "Kirameku" ? "小羊与小猪" : rawTitle;
     if (Title) document.title = `${transformI18n(meta.title)} | ${Title}`;
     else document.title = transformI18n(meta.title);
   }
@@ -144,7 +147,7 @@ export function useNav() {
 
   /** 获取`logo` */
   function getLogo() {
-    return `${import.meta.env.BASE_URL}icon.png`;
+    return `${import.meta.env.BASE_URL}logo.svg`;
   }
 
   return {

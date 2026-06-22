@@ -1,1 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" class="icon" viewBox="0 0 1024 1024"><path fill="#386BF3" d="M410.558.109c0 210.974-300.876 361.752-300.876 633.548 0 174.943 134.704 316.787 300.876 316.787s300.877-141.817 300.877-316.787C711.408 361.752 410.558 210.974 410.558.109"/><path fill="#C3D2FB" d="M613.469 73.665c0 211.055-300.877 361.914-300.877 633.547C312.592 882.156 447.296 1024 613.47 1024s300.876-141.817 300.876-316.788C914.29 435.58 613.469 284.72 613.469 73.665"/><path fill="#303F5B" d="M312.592 707.212c0-183.713 137.636-312.171 226.723-441.39 81.702 106.112 172.12 218.74 172.12 367.726A309.755 309.755 0 0 1 420.36 950.064a323.1 323.1 0 0 1-107.769-242.852z"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="小羊与小猪">
+  <defs>
+    <linearGradient id="bg" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7cc7ff" />
+      <stop offset="1" stop-color="#ff9ec7" />
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="56" height="56" rx="18" fill="url(#bg)" />
+  <circle cx="24" cy="26" r="10" fill="#fff7fb" />
+  <circle cx="40" cy="26" r="10" fill="#fffaf2" />
+  <circle cx="21" cy="24" r="1.7" fill="#3f4b63" />
+  <circle cx="27" cy="24" r="1.7" fill="#3f4b63" />
+  <circle cx="37" cy="24" r="1.7" fill="#3f4b63" />
+  <circle cx="43" cy="24" r="1.7" fill="#3f4b63" />
+  <ellipse cx="24" cy="29.5" rx="3.2" ry="2.1" fill="#ffb9d0" />
+  <ellipse cx="40" cy="29.5" rx="3.2" ry="2.1" fill="#ffc4a3" />
+  <path d="M20.4 17.4c1-2.5 3.4-4.2 6.1-4.2 2.8 0 5.2 1.7 6.2 4.2" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2.6" />
+  <path d="M39.2 17c1.3-1.8 3.4-2.8 5.7-2.8 3.8 0 6.9 3.1 6.9 6.9 0 1.8-.7 3.5-2 4.8l-7.8 7.7-7.8-7.7a6.7 6.7 0 0 1-2-4.8c0-3.8 3.1-6.9 6.9-6.9" fill="#fff3f7" opacity=".96" />
+  <path d="M42 22.5c.8-1.1 2.1-1.8 3.5-1.8 2.4 0 4.3 1.9 4.3 4.3 0 1.1-.4 2.2-1.3 3l-4.9 4.8-4.8-4.8a4.2 4.2 0 0 1-1.3-3c0-2.4 1.9-4.3 4.3-4.3" fill="#ff7cad" />
+  <path d="M20 42c3.3 2.5 7.5 3.8 12 3.8 4.5 0 8.8-1.3 12-3.8" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-width="3" />
+</svg>
