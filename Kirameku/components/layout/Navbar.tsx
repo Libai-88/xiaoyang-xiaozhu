@@ -193,21 +193,21 @@ export default function Navbar() {
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 glass-card rounded-none border-x-0 border-t-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-16 gap-3">
             {/* Logo */}
             <Link
               href="/"
               onClick={handleLogoClick}
-              className={`flex items-center space-x-0.5 select-none ${easterEgg ? "animate-[spin_0.5s_ease-in-out_3]" : ""}`}
+              className={`shrink-0 flex items-center space-x-0.5 select-none ${easterEgg ? "animate-[spin_0.5s_ease-in-out_3]" : ""}`}
               style={easterEgg ? { animation: "spin 0.5s ease-in-out 6, rainbow 3s linear" } : undefined}
             >
-              <span className={`text-xl font-bold tracking-tight ${easterEgg ? "text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500" : "text-slate-800 dark:text-white"}`} style={{ fontFamily: "'Noto Serif SC', serif" }}>
+              <span className={`whitespace-nowrap text-xl font-bold tracking-tight ${easterEgg ? "text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500" : "text-slate-800 dark:text-white"}`} style={{ fontFamily: "'Noto Serif SC', serif" }}>
                 小羊与小猪
               </span>
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-1">
+            <div className="hidden md:flex flex-1 min-w-0 items-center justify-center overflow-x-auto space-x-1">
               {navLinks.map((link) => {
                 const Icon = link.icon;
                 const isActive = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
@@ -215,13 +215,13 @@ export default function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`relative px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1.5 ${isActive
+                    className={`relative shrink-0 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1.5 ${isActive
                         ? "text-sky-600 dark:text-sky-400"
                         : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
                       }`}
                   >
                     <Icon className="w-4 h-4" />
-                    <span>{link.label}</span>
+                    <span className="whitespace-nowrap">{link.label}</span>
                     {isActive && (
                       <motion.div
                         layoutId="navbar-indicator"
@@ -239,7 +239,7 @@ export default function Navbar() {
             </div>
 
             {/* Theme Toggle, Settings & Mobile Menu */}
-            <div className="flex items-center gap-2">
+            <div className="shrink-0 flex items-center gap-2">
               <button
                 onClick={toggleTheme}
                 className="p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 transition-colors"
