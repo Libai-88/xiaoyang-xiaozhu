@@ -34,9 +34,13 @@ uploads_dir.mkdir(exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=str(uploads_dir)), name="uploads")
 
 # 挂载 Vue 管理后台
-admin_dist = Path(__file__).resolve().parent.parent / "admin" / "dist"
+admin_root = Path(__file__).resolve().parent.parent / "admin"
+admin_build = admin_root / "build"
+admin_dist = admin_root / "dist"
 if admin_dist.exists():
     app.mount("/admin", StaticFiles(directory=str(admin_dist), html=True), name="admin")
+elif admin_build.exists():
+    app.mount("/admin", StaticFiles(directory=str(admin_build), html=True), name="admin")
 
 
 @app.get("/api/health")
