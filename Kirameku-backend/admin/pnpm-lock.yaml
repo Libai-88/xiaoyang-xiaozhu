@@ -10,13 +10,13 @@ importers:
     dependencies:
       '@pureadmin/descriptions':
         specifier: ^1.2.1
-        version: 1.2.1(echarts@6.0.0)(element-plus@2.13.7(typescript@6.0.3)(vue@3.5.33(typescript@6.0.3)))(typescript@6.0.3)
+        version: 1.2.1(echarts@6.1.0)(element-plus@2.13.7(typescript@6.0.3)(vue@3.5.33(typescript@6.0.3)))(typescript@6.0.3)
       '@pureadmin/table':
         specifier: ^3.3.0
         version: 3.3.0(element-plus@2.13.7(typescript@6.0.3)(vue@3.5.33(typescript@6.0.3)))(typescript@6.0.3)
       '@pureadmin/utils':
         specifier: ^2.6.4
-        version: 2.6.4(echarts@6.0.0)(vue@3.5.33(typescript@6.0.3))
+        version: 2.6.4(echarts@6.1.0)(vue@3.5.33(typescript@6.0.3))
       '@vueuse/core':
         specifier: ^14.2.1
         version: 14.2.1(vue@3.5.33(typescript@6.0.3))
@@ -49,13 +49,13 @@ importers:
         version: 1.11.20
       echarts:
         specifier: ^6.0.0
-        version: 6.0.0
+        version: 6.1.0
       element-plus:
         specifier: ^2.13.7
         version: 2.13.7(typescript@6.0.3)(vue@3.5.33(typescript@6.0.3))
       js-cookie:
         specifier: ^3.0.5
-        version: 3.0.5
+        version: 3.0.8
       jsbarcode:
         specifier: ^3.12.3
         version: 3.12.3
@@ -82,7 +82,7 @@ importers:
         version: 3.28.1
       plus-pro-components:
         specifier: ^0.1.30
-        version: 0.1.30(element-plus@2.13.7(typescript@6.0.3)(vue@3.5.33(typescript@6.0.3)))(vue@3.5.33(typescript@6.0.3))
+        version: 0.1.31(element-plus@2.13.7(typescript@6.0.3)(vue@3.5.33(typescript@6.0.3)))(vue@3.5.33(typescript@6.0.3))
       qrcode:
         specifier: ^1.5.4
         version: 1.5.4
@@ -95,6 +95,9 @@ importers:
       sortablejs:
         specifier: ^1.15.7
         version: 1.15.7
+      tippy.js:
+        specifier: ^6.3.7
+        version: 6.3.7
       typeit:
         specifier: ^8.8.7
         version: 8.8.7
@@ -2558,8 +2561,8 @@ packages:
   duplexify@4.1.3:
     resolution: {integrity: sha512-M3BmBhwJRZsSx38lZyhE53Csddgzl5R7xGJNk7CVddZD6CcmwMCH8J+7AprIrQKH7TonKxaCjcv27Qmf+sQ+oA==}
 
-  echarts@6.0.0:
-    resolution: {integrity: sha512-Tte/grDQRiETQP4xz3iZWSvoHrkCQtwqd6hs+mifXcjrCuo2iKWbajFObuLJVBlDIJlOzgQPd1hsaKt/3+OMkQ==}
+  echarts@6.1.0:
+    resolution: {integrity: sha512-q0yaFPggC9FUdsWH4blavRWFmxdrIodbkoKNAjJudAI6CA9gNPxHtV2RcZNEepZVlk4yvBYkOkbk6HIVpIyHZA==}
 
   electron-to-chromium@1.5.344:
     resolution: {integrity: sha512-4MxfbmNDm+KPh066EZy+eUnkcDPcZ35wNmOWzFuh/ijvHsve6kbLTLURy88uCNK5FbpN+yk2nQY6BYh1GEt+wg==}
@@ -3128,9 +3131,8 @@ packages:
     resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
     hasBin: true
 
-  js-cookie@3.0.5:
-    resolution: {integrity: sha512-cEiJEAEoIbWfCZYKWhVwFuvPX1gETRYPw6LlaTKoxD3s2AkXzkCjnp6h0V77ozyqj0jakteJ4YqDJT830+lVGw==}
-    engines: {node: '>=14'}
+  js-cookie@3.0.8:
+    resolution: {integrity: sha512-yeJd4aNAdYZQjaon2bpD/Gb0B/omw7HQOsynXXcOiWVCacbBcPlgn8S/d1X6blFSaHao7ozqtW7NZW19xpCtIw==}
 
   js-sdsl@4.3.0:
     resolution: {integrity: sha512-mifzlm2+5nZ+lEcLJMoBK0/IH/bDg8XnJfd/Wq6IP+xoCjLZsTOnV2QpxlVbX9bMnkl5PdEjNtBJ9Cj1NjifhQ==}
@@ -3648,8 +3650,8 @@ packages:
   pkg-types@2.3.1:
     resolution: {integrity: sha512-y+ichcgc2LrADuhLNAx8DFjVfgz91pRxfZdI3UDhxHvcVEZsenLO+7XaU5vOp0u/7V/wZ+plyuQxtrDlZJ+yeg==}
 
-  plus-pro-components@0.1.30:
-    resolution: {integrity: sha512-tGmkC5ECu0QS7IyYuyrOTwb6Y8hTF+nUyUK47hGAdyfgs4VdjTlyaYBsNwG9n5ykile5F3vDwx8k4qWrOzEcXA==}
+  plus-pro-components@0.1.31:
+    resolution: {integrity: sha512-LKYAoDrM+VufVCfRuHUPJTBNwmzo/MRu7Lfkcg9+QKjmHzsOP1zo5ecMI4euddTqVjvvjC+8ZURK2CIpge0BQA==}
     peerDependencies:
       element-plus: ^2.3.4
       vue: ^3.2.0
@@ -4738,8 +4740,8 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  zrender@6.0.0:
-    resolution: {integrity: sha512-41dFXEEXuJpNecuUQq6JlbybmnHaqqpGlbH1yxnA5V9MMP4SbohSVZsJIwz+zdjQXSSlR1Vc34EgH1zxyTDvhg==}
+  zrender@6.1.0:
+    resolution: {integrity: sha512-oEGMDB6pOP2S6OwRR4PdVv610zrjnA3Bh+JnSG12fYJlBKjtNAoEb5fSUoCOOINlH96I2fU38/A2UpRKs67xYQ==}
 
 snapshots:
 
@@ -5666,10 +5668,10 @@ snapshots:
 
   '@popperjs/core@2.11.8': {}
 
-  '@pureadmin/descriptions@1.2.1(echarts@6.0.0)(element-plus@2.13.7(typescript@6.0.3)(vue@3.5.33(typescript@6.0.3)))(typescript@6.0.3)':
+  '@pureadmin/descriptions@1.2.1(echarts@6.1.0)(element-plus@2.13.7(typescript@6.0.3)(vue@3.5.33(typescript@6.0.3)))(typescript@6.0.3)':
     dependencies:
       '@element-plus/icons-vue': 2.3.2(vue@3.5.33(typescript@6.0.3))
-      '@pureadmin/utils': 2.6.4(echarts@6.0.0)(vue@3.5.33(typescript@6.0.3))
+      '@pureadmin/utils': 2.6.4(echarts@6.1.0)(vue@3.5.33(typescript@6.0.3))
       element-plus: 2.13.7(typescript@6.0.3)(vue@3.5.33(typescript@6.0.3))
       vue: 3.5.33(typescript@6.0.3)
     transitivePeerDependencies:
@@ -5683,9 +5685,9 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@pureadmin/utils@2.6.4(echarts@6.0.0)(vue@3.5.33(typescript@6.0.3))':
+  '@pureadmin/utils@2.6.4(echarts@6.1.0)(vue@3.5.33(typescript@6.0.3))':
     optionalDependencies:
-      echarts: 6.0.0
+      echarts: 6.1.0
       vue: 3.5.33(typescript@6.0.3)
 
   '@rolldown/binding-android-arm64@1.0.0-rc.17':
@@ -6905,10 +6907,10 @@ snapshots:
       readable-stream: 3.6.2
       stream-shift: 1.0.3
 
-  echarts@6.0.0:
+  echarts@6.1.0:
     dependencies:
       tslib: 2.3.0
-      zrender: 6.0.0
+      zrender: 6.1.0
 
   electron-to-chromium@1.5.344: {}
 
@@ -7552,7 +7554,7 @@ snapshots:
 
   jiti@2.6.1: {}
 
-  js-cookie@3.0.5: {}
+  js-cookie@3.0.8: {}
 
   js-sdsl@4.3.0: {}
 
@@ -8023,7 +8025,7 @@ snapshots:
       exsolve: 1.0.8
       pathe: 2.0.3
 
-  plus-pro-components@0.1.30(element-plus@2.13.7(typescript@6.0.3)(vue@3.5.33(typescript@6.0.3)))(vue@3.5.33(typescript@6.0.3)):
+  plus-pro-components@0.1.31(element-plus@2.13.7(typescript@6.0.3)(vue@3.5.33(typescript@6.0.3)))(vue@3.5.33(typescript@6.0.3)):
     dependencies:
       '@element-plus/icons-vue': 2.3.2(vue@3.5.33(typescript@6.0.3))
       element-plus: 2.13.7(typescript@6.0.3)(vue@3.5.33(typescript@6.0.3))
@@ -9139,6 +9141,6 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  zrender@6.0.0:
+  zrender@6.1.0:
     dependencies:
       tslib: 2.3.0
