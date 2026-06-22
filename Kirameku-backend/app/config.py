@@ -3,7 +3,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR / ".env", override=True)
+# Prefer real environment variables in deployment platforms like Render.
+load_dotenv(BASE_DIR / ".env", override=False)
 
 DATABASE_URL = os.environ["DATABASE_URL"]
 SECRET_KEY = os.environ["SECRET_KEY"]
