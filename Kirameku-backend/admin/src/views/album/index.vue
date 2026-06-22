@@ -16,11 +16,11 @@ import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
 defineOptions({ name: "AlbumIndex" });
 
-// ========== 相册列表 ==========
+// ========== 留影列表 ==========
 const loading = ref(false);
 const dataList = ref<AlbumItem[]>([]);
 const dialogVisible = ref(false);
-const dialogTitle = ref("新增相册");
+const dialogTitle = ref("新增留影集");
 const formRef = ref();
 const form = ref({
   id: 0,
@@ -31,12 +31,12 @@ const form = ref({
 });
 
 const rules = {
-  title: [{ required: true, message: "请输入相册名称", trigger: "blur" }]
+  title: [{ required: true, message: "请输入留影集名称", trigger: "blur" }]
 };
 
 const columns: TableColumnList = [
   { label: "ID", prop: "id", width: 70 },
-  { label: "相册名称", prop: "title", minWidth: 150 },
+  { label: "留影集名称", prop: "title", minWidth: 150 },
   { label: "描述", prop: "description", minWidth: 200 },
   {
     label: "封面",
@@ -99,7 +99,7 @@ async function handleSubmit() {
         cover: form.value.cover,
         sort: form.value.sort
       });
-      message("相册更新成功", { type: "success" });
+      message("留影集更新成功", { type: "success" });
     } else {
       await createAlbum({
         title: form.value.title,
@@ -107,7 +107,7 @@ async function handleSubmit() {
         cover: form.value.cover,
         sort: form.value.sort
       });
-      message("相册创建成功", { type: "success" });
+      message("留影集创建成功", { type: "success" });
     }
     dialogVisible.value = false;
     onSearch();
@@ -240,17 +240,17 @@ onMounted(() => onSearch());
 
 <template>
   <div class="p-4">
-    <!-- 相册列表 -->
+    <!-- 留影列表 -->
     <el-card shadow="never">
       <template #header>
         <div class="flex justify-between items-center">
-          <span class="font-medium">相册管理</span>
+          <span class="font-medium">留影管理</span>
           <el-button
             type="primary"
             :icon="useRenderIcon('ri:add-circle-line')"
-            @click="openDialog('新增相册')"
+            @click="openDialog('新增留影集')"
           >
-            新增相册
+            新增留影集
           </el-button>
         </div>
       </template>
@@ -287,12 +287,12 @@ onMounted(() => onSearch());
             link
             type="primary"
             :icon="useRenderIcon('ri:edit-line')"
-            @click="openDialog('修改相册', row)"
+            @click="openDialog('修改留影集', row)"
           >
             修改
           </el-button>
           <el-popconfirm
-            :title="`确认删除相册「${row.title}」及其所有照片？`"
+            :title="`确认删除留影集「${row.title}」及其所有照片？`"
             @confirm="handleDeleteAlbum(row)"
           >
             <template #reference>
@@ -309,7 +309,7 @@ onMounted(() => onSearch());
       </pure-table>
     </el-card>
 
-    <!-- 新增/编辑相册对话框 -->
+    <!-- 新增/编辑留影集对话框 -->
     <el-dialog
       v-model="dialogVisible"
       :title="dialogTitle"
@@ -322,14 +322,14 @@ onMounted(() => onSearch());
         :rules="rules"
         label-width="90px"
       >
-        <el-form-item label="相册名称" prop="title">
-          <el-input v-model="form.title" placeholder="请输入相册名称" />
+        <el-form-item label="留影集名称" prop="title">
+          <el-input v-model="form.title" placeholder="请输入留影集名称" />
         </el-form-item>
         <el-form-item label="描述">
           <el-input
             v-model="form.description"
             type="textarea"
-            placeholder="相册描述（可选）"
+            placeholder="留影说明（可选）"
           />
         </el-form-item>
         <el-form-item label="封面 URL">

@@ -99,10 +99,10 @@ onMounted(() => onSearch());
     <el-card shadow="never">
       <template #header>
         <div class="flex justify-between items-center">
-          <span class="font-medium">访客记录</span>
-          <el-popconfirm title="确认清空所有访客记录？" @confirm="handleClear">
+          <span class="font-medium">来访记录</span>
+          <el-popconfirm title="确认清空所有来访记录？" @confirm="handleClear">
             <template #reference>
-              <el-button type="danger" size="small">清空</el-button>
+              <el-button type="danger" size="small">清空记录</el-button>
             </template>
           </el-popconfirm>
         </div>

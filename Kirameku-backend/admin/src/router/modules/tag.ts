@@ -8,7 +8,7 @@ export default {
   redirect: "/tag/index",
   meta: {
     icon: "ri:bookmark-3-line",
-    title: "标签管理",
+    title: "杂记标签",
     rank: tag
   },
   children: [
@@ -17,7 +17,7 @@ export default {
       name: "TagIndex",
       component: () => import("@/views/tag/index.vue"),
       meta: {
-        title: "标签管理"
+        title: "杂记标签"
       }
     }
   ]

@@ -119,7 +119,7 @@ onMounted(() => onSearch());
       <template #header>
         <div class="flex justify-between items-center">
           <div class="flex items-center gap-3">
-            <span class="font-medium">文章管理</span>
+            <span class="font-medium">杂记管理</span>
             <el-select
               v-model="statusFilter"
               placeholder="全部状态"
@@ -140,7 +140,7 @@ onMounted(() => onSearch());
             :icon="useRenderIcon('ri:add-circle-line')"
             @click="handleCreate"
           >
-            写文章
+            写杂记
           </el-button>
         </div>
       </template>
@@ -198,7 +198,7 @@ onMounted(() => onSearch());
             编辑
           </el-button>
           <el-popconfirm
-            :title="`确认删除「${row.title}」？`"
+            :title="`确认删除这篇杂记「${row.title}」？`"
             @confirm="handleDelete(row)"
           >
             <template #reference>

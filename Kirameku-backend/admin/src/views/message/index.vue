@@ -149,7 +149,7 @@ onMounted(() => onSearch());
       <template #header>
         <div class="flex justify-between items-center">
           <div class="flex items-center gap-3">
-            <span class="font-medium">留言管理</span>
+            <span class="font-medium">悄悄话管理</span>
             <el-select
               v-model="statusFilter"
               placeholder="全部状态"
@@ -247,7 +247,7 @@ onMounted(() => onSearch());
             拒绝
           </el-button>
           <el-popconfirm
-            title="确认删除这条留言？子回复将一并删除。"
+            title="确认删除这条悄悄话？子回复将一并删除。"
             @confirm="handleDelete(row)"
           >
             <template #reference>

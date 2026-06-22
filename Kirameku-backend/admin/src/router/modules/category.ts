@@ -8,7 +8,7 @@ export default {
   redirect: "/category/index",
   meta: {
     icon: "ri:folder-open-line",
-    title: "分类管理",
+    title: "杂记分类",
     rank: category
   },
   children: [
@@ -17,7 +17,7 @@ export default {
       name: "CategoryIndex",
       component: () => import("@/views/category/index.vue"),
       meta: {
-        title: "分类管理"
+        title: "杂记分类"
       }
     }
   ]

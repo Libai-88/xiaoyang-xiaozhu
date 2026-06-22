@@ -77,7 +77,7 @@ async function onSearch() {
 
 // ========== 新增/编辑 ==========
 const dialogVisible = ref(false);
-const dialogTitle = ref("新增项目");
+const dialogTitle = ref("新增瞬间");
 const formRef = ref();
 const form = ref(getDefaultForm());
 
@@ -102,7 +102,7 @@ function getDefaultForm() {
 }
 
 const rules = {
-  name: [{ required: true, message: "请输入项目名称", trigger: "blur" }],
+  name: [{ required: true, message: "请输入瞬间标题", trigger: "blur" }],
   slug: [{ required: true, message: "请输入 Slug", trigger: "blur" }]
 };
 
@@ -154,10 +154,10 @@ async function handleSubmit() {
     delete (payload as any).id;
     if (form.value.id) {
       await updateProject(form.value.id, payload);
-      message("项目更新成功", { type: "success" });
+      message("瞬间更新成功", { type: "success" });
     } else {
       await createProject(payload);
-      message("项目创建成功", { type: "success" });
+      message("瞬间创建成功", { type: "success" });
     }
     dialogVisible.value = false;
     onSearch();
@@ -258,13 +258,13 @@ onMounted(() => onSearch());
     <el-card shadow="never">
       <template #header>
         <div class="flex justify-between items-center">
-          <span class="font-medium">项目管理</span>
+          <span class="font-medium">瞬间管理</span>
           <el-button
             type="primary"
             :icon="useRenderIcon('ri:add-circle-line')"
-            @click="openDialog('新增项目')"
+            @click="openDialog('新增瞬间')"
           >
-            新增项目
+            新增瞬间
           </el-button>
         </div>
       </template>
@@ -328,12 +328,12 @@ onMounted(() => onSearch());
             link
             type="primary"
             :icon="useRenderIcon('ri:edit-line')"
-            @click="openDialog('修改项目', row)"
+            @click="openDialog('修改瞬间', row)"
           >
             修改
           </el-button>
           <el-popconfirm
-            :title="`确认删除项目「${row.name}」？`"
+            :title="`确认删除瞬间「${row.name}」？`"
             @confirm="handleDelete(row)"
           >
             <template #reference>
@@ -363,8 +363,8 @@ onMounted(() => onSearch());
         :rules="rules"
         label-width="90px"
       >
-        <el-form-item label="项目名称" prop="name">
-          <el-input v-model="form.name" placeholder="项目名称" />
+        <el-form-item label="瞬间标题" prop="name">
+          <el-input v-model="form.name" placeholder="瞬间标题" />
         </el-form-item>
         <el-form-item label="Slug" prop="slug">
           <el-input v-model="form.slug" placeholder="url-friendly-slug" />

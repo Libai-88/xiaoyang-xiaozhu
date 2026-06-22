@@ -24,7 +24,7 @@ defineOptions({ name: "BookmarkIndex" });
 const loading = ref(false);
 const dataList = ref<BookmarkCategoryItem[]>([]);
 const dialogVisible = ref(false);
-const dialogTitle = ref("新增分类");
+const dialogTitle = ref("新增分组");
 const formRef = ref();
 const form = ref({
   id: 0,
@@ -35,7 +35,7 @@ const form = ref({
 });
 
 const rules = {
-  name: [{ required: true, message: "请输入分类名称", trigger: "blur" }]
+  name: [{ required: true, message: "请输入分组名称", trigger: "blur" }]
 };
 
 const columns: TableColumnList = [
@@ -109,7 +109,7 @@ async function handleSubmit() {
         description: form.value.description,
         sort: form.value.sort
       });
-      message("分类更新成功", { type: "success" });
+      message("分组更新成功", { type: "success" });
     } else {
       await createBookmarkCategory({
         name: form.value.name,
@@ -117,7 +117,7 @@ async function handleSubmit() {
         description: form.value.description,
         sort: form.value.sort
       });
-      message("分类创建成功", { type: "success" });
+      message("分组创建成功", { type: "success" });
     }
     dialogVisible.value = false;
     onSearch();
@@ -218,7 +218,7 @@ const sitesLoading = ref(false);
 
 // 站点表单
 const siteDialogVisible = ref(false);
-const siteDialogTitle = ref("新增站点");
+const siteDialogTitle = ref("新增收藏");
 const siteFormRef = ref();
 const siteForm = ref({
   id: 0,
@@ -240,8 +240,8 @@ const platformOptions = [
 ];
 
 const siteRules = {
-  name: [{ required: true, message: "请输入站点名称", trigger: "blur" }],
-  url: [{ required: true, message: "请输入站点链接", trigger: "blur" }]
+  name: [{ required: true, message: "请输入收藏名称", trigger: "blur" }],
+  url: [{ required: true, message: "请输入收藏链接", trigger: "blur" }]
 };
 
 const siteColumns: TableColumnList = [
@@ -348,10 +348,10 @@ async function handleSiteSubmit() {
     };
     if (siteForm.value.id) {
       await updateBookmarkSite(siteForm.value.id, payload);
-      message("站点更新成功", { type: "success" });
+      message("收藏更新成功", { type: "success" });
     } else {
       await createBookmarkSite(payload);
-      message("站点创建成功", { type: "success" });
+      message("收藏创建成功", { type: "success" });
     }
     siteDialogVisible.value = false;
     if (currentCategory.value) {
@@ -385,13 +385,13 @@ onMounted(() => onSearch());
     <el-card shadow="never">
       <template #header>
         <div class="flex justify-between items-center">
-          <span class="font-medium">收藏夹管理</span>
+          <span class="font-medium">藏宝库管理</span>
           <el-button
             type="primary"
             :icon="useRenderIcon('ri:add-circle-line')"
-            @click="openDialog('新增分类')"
+            @click="openDialog('新增分组')"
           >
-            新增分类
+            新增分组
           </el-button>
         </div>
       </template>
@@ -421,18 +421,18 @@ onMounted(() => onSearch());
             :icon="useRenderIcon('ri:bookmark-line')"
             @click="openSites(row)"
           >
-            管理站点
+            管理收藏
           </el-button>
           <el-button
             link
             type="primary"
             :icon="useRenderIcon('ri:edit-line')"
-            @click="openDialog('修改分类', row)"
+            @click="openDialog('修改分组', row)"
           >
             修改
           </el-button>
           <el-popconfirm
-            :title="`确认删除分类「${row.name}」及其所有站点？`"
+            :title="`确认删除分组「${row.name}」及其所有收藏？`"
             @confirm="handleDeleteCategory(row)"
           >
             <template #reference>
@@ -449,7 +449,7 @@ onMounted(() => onSearch());
       </pure-table>
     </el-card>
 
-    <!-- 新增/编辑分类对话框 -->
+    <!-- 新增/编辑分组对话框 -->
     <el-dialog
       v-model="dialogVisible"
       :title="dialogTitle"
@@ -462,8 +462,8 @@ onMounted(() => onSearch());
         :rules="rules"
         label-width="90px"
       >
-        <el-form-item label="分类名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入分类名称" />
+        <el-form-item label="分组名称" prop="name">
+          <el-input v-model="form.name" placeholder="请输入分组名称" />
         </el-form-item>
         <el-form-item label="图标">
           <div class="flex items-center gap-4 w-full">
@@ -505,7 +505,7 @@ onMounted(() => onSearch());
           <el-input
             v-model="form.description"
             type="textarea"
-            placeholder="分类描述（可选）"
+            placeholder="分组描述（可选）"
           />
         </el-form-item>
         <el-form-item label="排序">
@@ -521,27 +521,27 @@ onMounted(() => onSearch());
     <!-- 站点管理抽屉 -->
     <el-drawer
       v-model="drawerVisible"
-      :title="`管理站点 — ${currentCategory?.name ?? ''}`"
+      :title="`管理收藏 — ${currentCategory?.name ?? ''}`"
       size="70%"
       destroy-on-close
     >
       <template #header>
         <div class="flex justify-between items-center w-full pr-4">
           <span class="text-lg font-medium">
-            管理站点 — {{ currentCategory?.name ?? "" }}
+            管理收藏 — {{ currentCategory?.name ?? "" }}
           </span>
           <el-button
             type="primary"
             :icon="useRenderIcon('ri:add-circle-line')"
-            @click="openSiteDialog('新增站点')"
+            @click="openSiteDialog('新增收藏')"
           >
-            新增站点
+            新增收藏
           </el-button>
         </div>
       </template>
 
       <div v-loading="sitesLoading">
-        <el-empty v-if="!sites.length && !sitesLoading" description="暂无站点" />
+        <el-empty v-if="!sites.length && !sitesLoading" description="暂无收藏" />
         <pure-table
           v-else
           :data="sites"
@@ -585,12 +585,12 @@ onMounted(() => onSearch());
               link
               type="primary"
               :icon="useRenderIcon('ri:edit-line')"
-              @click="openSiteDialog('修改站点', row)"
+              @click="openSiteDialog('修改收藏', row)"
             >
               修改
             </el-button>
             <el-popconfirm
-              :title="`确认删除站点「${row.name}」？`"
+              :title="`确认删除收藏「${row.name}」？`"
               @confirm="handleDeleteSite(row)"
             >
               <template #reference>
@@ -608,7 +608,7 @@ onMounted(() => onSearch());
       </div>
     </el-drawer>
 
-    <!-- 新增/编辑站点对话框 -->
+    <!-- 新增/编辑收藏对话框 -->
     <el-dialog
       v-model="siteDialogVisible"
       :title="siteDialogTitle"
@@ -622,7 +622,7 @@ onMounted(() => onSearch());
         label-width="80px"
       >
         <el-form-item label="名称" prop="name">
-          <el-input v-model="siteForm.name" placeholder="站点名称" />
+          <el-input v-model="siteForm.name" placeholder="收藏名称" />
         </el-form-item>
         <el-form-item label="链接" prop="url">
           <el-input v-model="siteForm.url" placeholder="https://example.com" />

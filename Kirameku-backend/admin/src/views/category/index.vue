@@ -36,7 +36,7 @@ const columns: TableColumnList = [
   { label: "URL 别名", prop: "slug", minWidth: 150 },
   { label: "描述", prop: "description", minWidth: 200 },
   { label: "排序", prop: "sort", width: 80 },
-  { label: "文章数", prop: "post_count", width: 80 },
+  { label: "杂记数", prop: "post_count", width: 80 },
   {
     label: "创建时间",
     prop: "created_at",
@@ -129,7 +129,7 @@ onMounted(() => onSearch());
     <el-card shadow="never">
       <template #header>
         <div class="flex justify-between items-center">
-          <span class="font-medium">分类管理</span>
+          <span class="font-medium">杂记分类</span>
           <el-button
             type="primary"
             :icon="useRenderIcon('ri:add-circle-line')"

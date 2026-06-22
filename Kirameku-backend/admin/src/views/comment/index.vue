@@ -19,7 +19,7 @@ const columns: TableColumnList = [
   { label: "ID", prop: "id", width: 60 },
   { label: "用户", prop: "github_user", width: 140, slot: "user" },
   { label: "内容", prop: "content", minWidth: 250 },
-  { label: "文章ID", prop: "post_id", width: 80 },
+  { label: "杂记ID", prop: "post_id", width: 80 },
   { label: "IP", prop: "ip", width: 130 },
   {
     label: "回复",
@@ -115,7 +115,7 @@ onMounted(() => onSearch());
       <template #header>
         <div class="flex justify-between items-center">
           <div class="flex items-center gap-3">
-            <span class="font-medium">评论管理</span>
+            <span class="font-medium">杂记评论</span>
             <el-select
               v-model="statusFilter"
               placeholder="全部状态"

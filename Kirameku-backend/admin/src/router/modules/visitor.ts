@@ -8,7 +8,7 @@ export default {
   redirect: "/visitor/index",
   meta: {
     icon: "ri:user-search-line",
-    title: "访客记录",
+    title: "来访记录",
     rank: visitor
   },
   children: [
@@ -17,7 +17,7 @@ export default {
       name: "VisitorIndex",
       component: () => import("@/views/visitor/index.vue"),
       meta: {
-        title: "访客记录"
+        title: "来访记录"
       }
     }
   ]

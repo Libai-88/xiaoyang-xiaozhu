@@ -158,7 +158,7 @@ onMounted(async () => {
       <template #header>
         <div class="flex justify-between items-center">
           <span class="font-medium">
-            {{ postId ? "编辑文章" : "写文章" }}
+            {{ postId ? "编辑杂记" : "写杂记" }}
           </span>
           <div class="flex gap-2">
             <el-button @click="router.push('/post/index')">返回</el-button>
@@ -178,7 +178,7 @@ onMounted(async () => {
         <el-form-item label="标题" prop="title">
           <el-input
             v-model="form.title"
-            placeholder="文章标题"
+            placeholder="杂记标题"
             @blur="autoSlug"
           />
         </el-form-item>
@@ -192,7 +192,7 @@ onMounted(async () => {
             v-model="form.description"
             type="textarea"
             :rows="2"
-            placeholder="文章摘要（可选）"
+            placeholder="杂记摘要（可选）"
           />
         </el-form-item>
 

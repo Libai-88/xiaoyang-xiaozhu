@@ -23,7 +23,7 @@ const columns: TableColumnList = [
   { label: "ID", prop: "id", width: 70 },
   { label: "标签名称", prop: "name", minWidth: 200 },
   { label: "URL 别名", prop: "slug", minWidth: 200 },
-  { label: "文章数", prop: "post_count", width: 100 },
+  { label: "杂记数", prop: "post_count", width: 100 },
   {
     label: "操作",
     fixed: "right",
@@ -98,7 +98,7 @@ onMounted(() => onSearch());
     <el-card shadow="never">
       <template #header>
         <div class="flex justify-between items-center">
-          <span class="font-medium">标签管理</span>
+          <span class="font-medium">杂记标签</span>
           <el-button
             type="primary"
             :icon="useRenderIcon('ri:add-circle-line')"

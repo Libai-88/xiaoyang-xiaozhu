@@ -20,7 +20,7 @@ defineOptions({ name: "ChatterIndex" });
 
 const activeTab = ref("chatter");
 
-// ========== 说说列表 ==========
+// ========== 碎碎念列表 ==========
 const loading = ref(false);
 const dataList = ref<ChatterItem[]>([]);
 const statusFilter = ref("");
@@ -108,9 +108,9 @@ function handleCurrentChange(val: number) {
   onSearch();
 }
 
-// ========== 说说新增/编辑 ==========
+// ========== 碎碎念新增/编辑 ==========
 const dialogVisible = ref(false);
-const dialogTitle = ref("新增说说");
+const dialogTitle = ref("新增碎碎念");
 const formRef = ref();
 const form = ref({
   id: 0,
@@ -121,7 +121,7 @@ const form = ref({
 });
 
 const rules = {
-  content: [{ required: true, message: "请输入说说内容", trigger: "blur" }]
+  content: [{ required: true, message: "请输入碎碎念内容", trigger: "blur" }]
 };
 
 function openDialog(title: string, row?: ChatterItem) {
@@ -152,10 +152,10 @@ async function handleSubmit() {
     };
     if (form.value.id) {
       await updateChatter(form.value.id, payload);
-      message("说说更新成功", { type: "success" });
+      message("碎碎念更新成功", { type: "success" });
     } else {
       await createChatter(payload);
-      message("说说创建成功", { type: "success" });
+      message("碎碎念创建成功", { type: "success" });
     }
     dialogVisible.value = false;
     onSearch();
@@ -247,7 +247,7 @@ const commentColumns: TableColumnList = [
   { label: "ID", prop: "id", width: 60 },
   { label: "用户", prop: "github_user", width: 140, slot: "user" },
   { label: "内容", prop: "content", minWidth: 250 },
-  { label: "说说ID", prop: "chatter_id", width: 80 },
+  { label: "碎碎念ID", prop: "chatter_id", width: 90 },
   { label: "IP", prop: "ip", width: 130 },
   { label: "回复", prop: "replies", width: 70, slot: "replies" },
   { label: "状态", prop: "status", width: 90, slot: "status" },
@@ -339,10 +339,10 @@ onMounted(() => onSearch());
   <div class="p-4">
     <el-card shadow="never">
       <el-tabs v-model="activeTab">
-        <el-tab-pane label="说说管理" name="chatter">
+        <el-tab-pane label="碎碎念管理" name="chatter">
           <template #label>
             <div class="flex items-center gap-1">
-              <span>说说管理</span>
+              <span>碎碎念管理</span>
             </div>
           </template>
 
@@ -363,9 +363,9 @@ onMounted(() => onSearch());
             <el-button
               type="primary"
               :icon="useRenderIcon('ri:add-circle-line')"
-              @click="openDialog('新增说说')"
+              @click="openDialog('新增碎碎念')"
             >
-              新增说说
+              新增碎碎念
             </el-button>
           </div>
 
@@ -408,12 +408,12 @@ onMounted(() => onSearch());
                 link
                 type="primary"
                 :icon="useRenderIcon('ri:edit-line')"
-                @click="openDialog('修改说说', row)"
+                @click="openDialog('修改碎碎念', row)"
               >
                 修改
               </el-button>
               <el-popconfirm
-                :title="`确认删除此说说？`"
+                :title="`确认删除这条碎碎念？`"
                 @confirm="handleDelete(row)"
               >
                 <template #reference>
@@ -430,10 +430,10 @@ onMounted(() => onSearch());
           </pure-table>
         </el-tab-pane>
 
-        <el-tab-pane label="评论管理" name="comment">
+        <el-tab-pane label="碎碎念评论" name="comment">
           <template #label>
             <div class="flex items-center gap-1">
-              <span>评论管理</span>
+              <span>碎碎念评论</span>
             </div>
           </template>
 
@@ -650,7 +650,7 @@ onMounted(() => onSearch());
             v-model="form.content"
             type="textarea"
             :rows="5"
-            placeholder="说点什么..."
+            placeholder="写一句想对你说的话..."
           />
         </el-form-item>
         <el-form-item label="心情">

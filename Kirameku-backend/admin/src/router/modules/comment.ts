@@ -8,7 +8,7 @@ export default {
   redirect: "/comment/index",
   meta: {
     icon: "ri:chat-3-line",
-    title: "评论管理",
+    title: "杂记评论",
     rank: comment
   },
   children: [
@@ -17,7 +17,7 @@ export default {
       name: "CommentIndex",
       component: () => import("@/views/comment/index.vue"),
       meta: {
-        title: "评论管理"
+        title: "杂记评论"
       }
     }
   ]

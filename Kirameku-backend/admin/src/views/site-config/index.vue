@@ -16,7 +16,7 @@ const dataList = ref<SiteConfigItem[]>([]);
 
 // 编辑对话框
 const dialogVisible = ref(false);
-const dialogTitle = ref("编辑配置");
+const dialogTitle = ref("编辑配置项");
 const formRef = ref();
 const form = ref({
   key: "",
@@ -66,14 +66,14 @@ async function onSearch() {
 
 function openAdd() {
   isEdit.value = false;
-  dialogTitle.value = "新增配置";
+  dialogTitle.value = "新增配置项";
   form.value = { key: "", value: "", description: "" };
   dialogVisible.value = true;
 }
 
 function openEdit(row: SiteConfigItem) {
   isEdit.value = true;
-  dialogTitle.value = "编辑配置";
+  dialogTitle.value = "编辑配置项";
   form.value = {
     key: row.key,
     value: typeof row.value === "string" ? row.value : JSON.stringify(row.value),
@@ -102,7 +102,7 @@ async function handleSubmit() {
         value: form.value.value,
         description: form.value.description
       });
-      msg("新增成功", { type: "success" });
+      msg("新增配置项成功", { type: "success" });
     }
     dialogVisible.value = false;
     onSearch();
@@ -138,8 +138,8 @@ onMounted(() => onSearch());
     <el-card shadow="never">
       <template #header>
         <div class="flex justify-between items-center">
-          <span class="font-medium">站点配置</span>
-          <el-button type="primary" @click="openAdd">新增配置</el-button>
+          <span class="font-medium">空间配置</span>
+          <el-button type="primary" @click="openAdd">新增配置项</el-button>
         </div>
       </template>
 
@@ -162,7 +162,7 @@ onMounted(() => onSearch());
             编辑
           </el-button>
           <el-popconfirm
-            :title="`确认删除配置 ${row.key}？`"
+            :title="`确认删除配置项 ${row.key}？`"
             @confirm="handleDelete(row)"
           >
             <template #reference>
@@ -186,14 +186,14 @@ onMounted(() => onSearch());
         :rules="rules"
         label-width="80px"
       >
-        <el-form-item label="配置键名" prop="key">
+        <el-form-item label="配置项标识" prop="key">
           <el-input
             v-model="form.key"
             :disabled="isEdit"
             placeholder="如 cloud_music_playlist_id"
           />
         </el-form-item>
-        <el-form-item label="配置值" prop="value">
+        <el-form-item label="配置内容" prop="value">
           <el-input
             v-model="form.value"
             type="textarea"
