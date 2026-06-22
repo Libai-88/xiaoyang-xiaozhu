@@ -6,9 +6,9 @@ export default {
   redirect: "/error/403",
   meta: {
     icon: "ri/information-line",
-    // showLink: false,
     title: $t("menus.pureAbnormal"),
-    rank: error
+    rank: error,
+    showLink: false
   },
   children: [
     {

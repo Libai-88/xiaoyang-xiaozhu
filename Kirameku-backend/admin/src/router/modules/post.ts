@@ -8,7 +8,7 @@ export default {
   redirect: "/post/index",
   meta: {
     icon: "ri:article-line",
-    title: "文章管理",
+    title: "杂记管理",
     rank: post
   },
   children: [
@@ -17,7 +17,7 @@ export default {
       name: "PostIndex",
       component: () => import("@/views/post/index.vue"),
       meta: {
-        title: "文章列表"
+        title: "杂记列表"
       }
     },
     {
@@ -25,7 +25,7 @@ export default {
       name: "PostEdit",
       component: () => import("@/views/post/edit.vue"),
       meta: {
-        title: "编辑文章",
+        title: "编辑杂记",
         showLink: false,
         activePath: "/post/index"
       }

@@ -7,7 +7,8 @@ export default {
   meta: {
     icon: "ep/edit",
     title: $t("menus.pureEditor"),
-    rank: editor
+    rank: editor,
+    showLink: false
   },
   children: [
     {

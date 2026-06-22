@@ -8,7 +8,7 @@ export default {
   redirect: "/site-config/index",
   meta: {
     icon: "ri:settings-3-line",
-    title: "站点配置",
+    title: "空间配置",
     rank: siteConfig
   },
   children: [
@@ -17,7 +17,7 @@ export default {
       name: "SiteConfigIndex",
       component: () => import("@/views/site-config/index.vue"),
       meta: {
-        title: "站点配置"
+        title: "空间配置"
       }
     }
   ]

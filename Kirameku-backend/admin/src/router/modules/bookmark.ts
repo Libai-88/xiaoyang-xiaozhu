@@ -8,7 +8,7 @@ export default {
   redirect: "/bookmark/index",
   meta: {
     icon: "ri:bookmark-3-line",
-    title: "收藏夹管理",
+    title: "藏宝库管理",
     rank: bookmark
   },
   children: [
@@ -16,7 +16,7 @@ export default {
       path: "/bookmark/index",
       name: "BookmarkIndex",
       component: () => import("@/views/bookmark/index.vue"),
-      meta: { title: "收藏夹管理" }
+      meta: { title: "藏宝库管理" }
     }
   ]
 } satisfies RouteConfigsTable;

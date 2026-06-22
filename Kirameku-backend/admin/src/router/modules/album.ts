@@ -8,7 +8,7 @@ export default {
   redirect: "/album/index",
   meta: {
     icon: "ri:image-2-line",
-    title: "相册管理",
+    title: "留影管理",
     rank: album
   },
   children: [
@@ -17,7 +17,7 @@ export default {
       name: "AlbumIndex",
       component: () => import("@/views/album/index.vue"),
       meta: {
-        title: "相册管理"
+        title: "留影管理"
       }
     }
   ]

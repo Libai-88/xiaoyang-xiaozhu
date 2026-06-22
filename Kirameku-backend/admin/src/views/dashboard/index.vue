@@ -22,8 +22,8 @@ const statCards = computed(() => {
   if (!stats.value) return [];
   const c = stats.value.counts;
   return [
-    { title: "已发布文章", value: c.posts, icon: Document, color: "#409eff" },
-    { title: "草稿", value: c.drafts, icon: EditPen, color: "#409eff" },
+    { title: "已发布杂记", value: c.posts, icon: Document, color: "#409eff" },
+    { title: "草稿箱", value: c.drafts, icon: EditPen, color: "#409eff" },
     { title: "分类", value: c.categories, icon: Files, color: "#409eff" },
     { title: "标签", value: c.tags, icon: Discount, color: "#409eff" },
     { title: "评论", value: c.comments, icon: Comment, color: "#409eff" },
@@ -211,7 +211,7 @@ onMounted(async () => {
       <el-col :xs="24" :md="12" class="mb-4">
         <el-card shadow="never">
           <template #header>
-            <span class="font-medium">文章发布趋势（近30天）</span>
+            <span class="font-medium">杂记发布趋势（近30天）</span>
           </template>
           <div ref="postTrendRef" style="width: 100%; height: 280px" />
         </el-card>

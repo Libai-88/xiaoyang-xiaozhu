@@ -8,7 +8,7 @@ export default {
   redirect: "/chatter/index",
   meta: {
     icon: "ri:chat-smile-2-line",
-    title: "说说管理",
+    title: "碎碎念管理",
     rank: chatter
   },
   children: [
@@ -17,7 +17,7 @@ export default {
       name: "ChatterIndex",
       component: () => import("@/views/chatter/index.vue"),
       meta: {
-        title: "说说管理"
+        title: "碎碎念管理"
       }
     }
   ]

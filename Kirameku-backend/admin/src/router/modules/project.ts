@@ -8,7 +8,7 @@ export default {
   redirect: "/project/index",
   meta: {
     icon: "ri:rocket-2-line",
-    title: "项目管理",
+    title: "瞬间管理",
     rank: project
   },
   children: [
@@ -17,7 +17,7 @@ export default {
       name: "ProjectIndex",
       component: () => import("@/views/project/index.vue"),
       meta: {
-        title: "项目管理"
+        title: "瞬间管理"
       }
     }
   ]

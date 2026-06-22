@@ -8,7 +8,7 @@ export default {
   redirect: "/message/index",
   meta: {
     icon: "ri:message-3-line",
-    title: "留言管理",
+    title: "悄悄话管理",
     rank: message
   },
   children: [
@@ -17,7 +17,7 @@ export default {
       name: "MessageIndex",
       component: () => import("@/views/message/index.vue"),
       meta: {
-        title: "留言管理"
+        title: "悄悄话管理"
       }
     }
   ]
