@@ -48,7 +48,7 @@ export default function SiteDashboard() {
         <div className="flex items-center gap-2 w-full md:w-auto justify-center md:justify-start">
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
           <span>
-            系统已稳定运行：
+            我们已经在一起：
             <span className="text-indigo-600 dark:text-indigo-400 font-black">
               {uptimeStr}
             </span>
