@@ -28,3 +28,9 @@ OSS_BUCKET_NAME = os.getenv("OSS_BUCKET_NAME", "")
 OSS_ENDPOINT = os.getenv("OSS_ENDPOINT", "")
 OSS_CUSTOM_DOMAIN = os.getenv("OSS_CUSTOM_DOMAIN", "")
 OSS_PREFIX = os.getenv("OSS_PREFIX", "")
+
+# StarDots 图床配置
+STARDOTS_KEY = os.getenv("STARDOTS_KEY", "")
+STARDOTS_SECRET = os.getenv("STARDOTS_SECRET", "")
+STARDOTS_SPACE = os.getenv("STARDOTS_SPACE", "")
+STARDOTS_API_BASE = os.getenv("STARDOTS_API_BASE", "https://api.stardots.io").rstrip("/")
