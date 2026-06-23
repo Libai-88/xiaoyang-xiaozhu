@@ -3,7 +3,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { marked } from "marked";
 import hljs from "highlight.js/lib/core";
@@ -188,12 +187,11 @@ export default function PostDetailPage() {
         {/* 封面图 */}
         {post.cover && (
           <div className="relative w-full h-40 sm:h-56 md:h-72 overflow-hidden">
-            <Image
+            <img
               src={post.cover}
               alt={post.title}
-              fill
-              className="object-cover"
-              priority
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="eager"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
           </div>

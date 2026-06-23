@@ -2,7 +2,6 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { Eye, Heart, Clock, Pin } from "lucide-react";
 
@@ -93,12 +92,11 @@ export default function PostCard({ post, index }: PostCardProps) {
           >
             {/* 封面图 */}
             <div className="relative aspect-[16/10] w-full overflow-hidden">
-              <Image
+              <img
                 src={post.cover || "/images/default-cover.jpg"}
                 alt={post.title}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
               />
               {/* 渐变遮罩 */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />

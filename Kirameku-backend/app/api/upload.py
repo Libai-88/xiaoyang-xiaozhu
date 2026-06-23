@@ -1,5 +1,6 @@
 import uuid
 from io import BytesIO
+from pathlib import Path
 
 import oss2
 from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
@@ -19,13 +20,25 @@ router = APIRouter(prefix="/api/upload", tags=["上传"])
 
 ALLOWED_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml"}
 MAX_SIZE = 10 * 1024 * 1024  # 10MB
+UPLOADS_DIR = Path(__file__).resolve().parent.parent.parent / "uploads"
+UPLOADS_DIR.mkdir(exist_ok=True)
 
 
 def _get_bucket():
-    if not all([OSS_ACCESS_KEY_ID, OSS_ACCESS_KEY_SECRET, OSS_BUCKET_NAME, OSS_ENDPOINT, OSS_CUSTOM_DOMAIN]):
-        raise HTTPException(500, "未配置 OSS，暂不可上传图片")
     auth = oss2.Auth(OSS_ACCESS_KEY_ID, OSS_ACCESS_KEY_SECRET)
     return oss2.Bucket(auth, OSS_ENDPOINT, OSS_BUCKET_NAME)
+
+
+def _can_use_oss():
+    return all(
+        [
+            OSS_ACCESS_KEY_ID,
+            OSS_ACCESS_KEY_SECRET,
+            OSS_BUCKET_NAME,
+            OSS_ENDPOINT,
+            OSS_CUSTOM_DOMAIN,
+        ]
+    )
 
 
 @router.post("/image")
@@ -49,14 +62,18 @@ async def upload_image(
     except Exception:
         pass
 
-    # 生成 OSS 路径
+    # 生成文件名
     ext = file.filename.split(".")[-1] if file.filename and "." in file.filename else "webp"
     filename = f"{uuid.uuid4().hex}.{ext}"
-    oss_key = f"{OSS_PREFIX}{filename}"
 
-    # 上传到 OSS
-    bucket = _get_bucket()
-    bucket.put_object(oss_key, content)
+    if _can_use_oss():
+        oss_key = f"{OSS_PREFIX}{filename}"
+        bucket = _get_bucket()
+        bucket.put_object(oss_key, content)
+        url = f"{OSS_CUSTOM_DOMAIN}/{oss_key}"
+    else:
+        file_path = UPLOADS_DIR / filename
+        file_path.write_bytes(content)
+        url = f"/uploads/{filename}"
 
-    url = f"{OSS_CUSTOM_DOMAIN}/{oss_key}"
     return {"url": url, "orientation": orientation}
