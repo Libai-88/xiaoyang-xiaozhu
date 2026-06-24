@@ -21,16 +21,14 @@ export default function PhotoWallPreview() {
   const isDragging = useRef(false);
 
   useEffect(() => {
-    const isMobile = window.innerWidth < 768;
-    const targetTitle = isMobile ? "2" : "1";
     getAlbums()
-      .then((albums) => {
-        const target = albums.find((a) => a.title === targetTitle);
-        if (!target) return;
-        return getAlbumPhotos(target.id);
-      })
-      .then((data) => {
-        if (data?.length) setPhotos(data.reverse());
+      .then(async (albums) => {
+        const allPhotos: Photo[] = [];
+        for (const album of albums) {
+          const photos = await getAlbumPhotos(album.id);
+          if (photos?.length) allPhotos.push(...photos);
+        }
+        if (allPhotos.length) setPhotos(allPhotos.reverse());
       })
       .catch(() => {});
   }, []);
