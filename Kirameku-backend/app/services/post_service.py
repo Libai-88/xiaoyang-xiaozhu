@@ -3,7 +3,7 @@ import json
 from sqlmodel import Session, select, func
 from fastapi import HTTPException
 
-from app.models import Post, Category, Tag, PostTag
+from app.models import Post, Category, Tag, PostTag, Comment
 from app.schemas import PostCreate, PostUpdate
 
 
@@ -207,6 +207,11 @@ def delete_post(session: Session, post_id: int):
     if not post:
         raise HTTPException(status_code=404, detail="文章不存在")
     cat_id = post.category_id
+    # 先删除关联的标签和评论，避免外键约束报错
+    for pt in session.exec(select(PostTag).where(PostTag.post_id == post_id)).all():
+        session.delete(pt)
+    for comment in session.exec(select(Comment).where(Comment.post_id == post_id)).all():
+        session.delete(comment)
     session.delete(post)
     session.flush()
     _update_category_count(session, cat_id)
