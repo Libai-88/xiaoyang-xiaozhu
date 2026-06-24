@@ -40,6 +40,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "picsum.photos" },
       { protocol: "https", hostname: "avatars.githubusercontent.com" },
       { protocol: "http", hostname: "wfqqreader-1252317822.image.myqcloud.com" },
+      { protocol: "https", hostname: "i.stardots.io" },
     ],
   },
 };
