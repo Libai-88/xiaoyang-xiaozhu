@@ -136,21 +136,7 @@ input, textarea, [contenteditable], .prose, code, pre {
   animation: gradient-flow 15s ease infinite;
 }
 
-/* ========== 文字截断 ========== */
-
-.line-clamp-1 {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+/* ========== 文字截断（Tailwind CSS 4 已内置 line-clamp-*） ========== */
 
 /* ========== 暗色模式背景增强 ========== */
 

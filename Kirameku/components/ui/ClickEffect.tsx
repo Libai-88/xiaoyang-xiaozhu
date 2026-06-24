@@ -25,6 +25,8 @@ const COLORS = [
   "#fb923c", // orange-400
 ];
 
+const MAX_PARTICLES = 100;
+
 export default function ClickEffect() {
   const pathname = usePathname();
   const { clickEffect } = useEffects();
@@ -40,6 +42,8 @@ export default function ClickEffect() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    let running = true;
+
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -50,6 +54,7 @@ export default function ClickEffect() {
     const spawn = (x: number, y: number) => {
       const count = 8 + Math.floor(Math.random() * 6);
       for (let i = 0; i < count; i++) {
+        if (particles.current.length >= MAX_PARTICLES) break;
         const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
         const speed = 2 + Math.random() * 4;
         particles.current.push({
@@ -66,6 +71,7 @@ export default function ClickEffect() {
     };
 
     const loop = () => {
+      if (!running) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.current = particles.current.filter((p) => p.alpha > 0);
       for (const p of particles.current) {
@@ -80,16 +86,37 @@ export default function ClickEffect() {
         ctx.fill();
       }
       ctx.globalAlpha = 1;
+      if (particles.current.length > 0) {
+        animFrame.current = requestAnimationFrame(loop);
+      }
+    };
+
+    const startLoop = () => {
+      if (!running) return;
+      cancelAnimationFrame(animFrame.current);
       animFrame.current = requestAnimationFrame(loop);
     };
-    loop();
 
-    const onClick = (e: MouseEvent) => spawn(e.clientX, e.clientY);
+    const onClick = (e: MouseEvent) => {
+      spawn(e.clientX, e.clientY);
+      startLoop();
+    };
     window.addEventListener("click", onClick);
 
+    const handleVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(animFrame.current);
+      } else if (particles.current.length > 0) {
+        startLoop();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+
     return () => {
+      running = false;
       window.removeEventListener("resize", resize);
       window.removeEventListener("click", onClick);
+      document.removeEventListener("visibilitychange", handleVisibility);
       cancelAnimationFrame(animFrame.current);
     };
   }, [disabled]);

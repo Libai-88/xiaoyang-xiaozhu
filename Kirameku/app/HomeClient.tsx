@@ -5,13 +5,21 @@ import SearchBar from "@/components/ui/SearchBar";
 import ProfileCard from "@/components/home/ProfileCard";
 import FadeIn from "@/components/ui/FadeIn";
 
-const CloudPlayer = dynamic(() => import("@/components/music/CloudPlayer"), { ssr: false });
-const LyricBar = dynamic(() => import("@/components/music/LyricBar"), { ssr: false });
-const LatestPostsCarousel = dynamic(() => import("@/components/home/LatestPostsCarousel"), { ssr: false });
-const LatestChatterCarousel = dynamic(() => import("@/components/home/LatestChatterCarousel"), { ssr: false });
-const PhotoWallPreview = dynamic(() => import("@/components/home/PhotoWallPreview"), { ssr: false });
-const DogDiary = dynamic(() => import("@/components/home/DogDiary"), { ssr: false });
-const SiteDashboard = dynamic(() => import("@/components/widgets/SiteDashboard"), { ssr: false });
+const placeholder = (
+  <div className="rounded-3xl bg-white/20 dark:bg-slate-800/30 backdrop-blur-md border border-white/30 animate-pulse min-h-[240px] md:min-h-[420px]" />
+);
+
+const smallPlaceholder = (
+  <div className="rounded-3xl bg-white/20 dark:bg-slate-800/30 backdrop-blur-md border border-white/30 animate-pulse min-h-[160px] md:min-h-[220px]" />
+);
+
+const CloudPlayer = dynamic(() => import("@/components/music/CloudPlayer"), { ssr: false, loading: () => smallPlaceholder });
+const LyricBar = dynamic(() => import("@/components/music/LyricBar"), { ssr: false, loading: () => smallPlaceholder });
+const LatestPostsCarousel = dynamic(() => import("@/components/home/LatestPostsCarousel"), { ssr: false, loading: () => smallPlaceholder });
+const LatestChatterCarousel = dynamic(() => import("@/components/home/LatestChatterCarousel"), { ssr: false, loading: () => smallPlaceholder });
+const PhotoWallPreview = dynamic(() => import("@/components/home/PhotoWallPreview"), { ssr: false, loading: () => placeholder });
+const DogDiary = dynamic(() => import("@/components/home/DogDiary"), { ssr: false, loading: () => smallPlaceholder });
+const SiteDashboard = dynamic(() => import("@/components/widgets/SiteDashboard"), { ssr: false, loading: () => smallPlaceholder });
 
 export default function HomeClient({
   postCount,

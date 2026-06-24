@@ -33,6 +33,8 @@ export default function KiraSparkle() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    let running = true;
+
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -96,6 +98,7 @@ export default function KiraSparkle() {
     window.addEventListener("touchend", onMouseUp);
 
     const loop = () => {
+      if (!running) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       sparkles.current = sparkles.current.filter((p) => {
@@ -129,14 +132,44 @@ export default function KiraSparkle() {
         ctx.restore();
       }
 
+      if (sparkles.current.length > 0) {
+        animFrame.current = requestAnimationFrame(loop);
+      }
+    };
+
+    const startLoop = () => {
+      if (!running) return;
+      cancelAnimationFrame(animFrame.current);
       animFrame.current = requestAnimationFrame(loop);
     };
-    loop();
+
+    // Override onMouseUp to also start loop
+    const onMouseUpWithStart = () => {
+      setTimeout(() => {
+        handleSelection();
+        if (sparkles.current.length > 0) startLoop();
+      }, 0);
+    };
+    window.removeEventListener("mouseup", onMouseUp);
+    window.removeEventListener("touchend", onMouseUp);
+    window.addEventListener("mouseup", onMouseUpWithStart);
+    window.addEventListener("touchend", onMouseUpWithStart);
+
+    const handleVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(animFrame.current);
+      } else if (sparkles.current.length > 0) {
+        startLoop();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
 
     return () => {
+      running = false;
       window.removeEventListener("resize", resize);
-      window.removeEventListener("mouseup", onMouseUp);
-      window.removeEventListener("touchend", onMouseUp);
+      window.removeEventListener("mouseup", onMouseUpWithStart);
+      window.removeEventListener("touchend", onMouseUpWithStart);
+      document.removeEventListener("visibilitychange", handleVisibility);
       cancelAnimationFrame(animFrame.current);
     };
   }, [disabled]);

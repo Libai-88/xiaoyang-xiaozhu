@@ -1,5 +1,6 @@
 "use client";
 
+import "highlight.js/styles/vs2015.css";
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";

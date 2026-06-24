@@ -32,3 +32,7 @@ export function getAlbumById(albumId: number) {
 export function getAlbumPhotos(albumId: number) {
   return request<PhotoItem[]>(`/api/albums/${albumId}/photos`);
 }
+
+export function getAllPhotos() {
+  return request<PhotoItem[]>("/api/albums/all-photos");
+}

@@ -4,6 +4,7 @@ const backendUrl = process.env.BACKEND_URL || "http://127.0.0.1:8000";
 
 const nextConfig: NextConfig = {
   compress: true,
+  poweredByHeader: false,
 
   async rewrites() {
     return [
@@ -22,6 +23,17 @@ const nextConfig: NextConfig = {
     ];
   },
 
+  async headers() {
+    return [
+      {
+        source: "/_next/static/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+    ];
+  },
+
   experimental: {
     optimizePackageImports: [
       "framer-motion",
@@ -29,6 +41,8 @@ const nextConfig: NextConfig = {
       "@dnd-kit/core",
       "@dnd-kit/sortable",
       "@dnd-kit/utilities",
+      "recharts",
+      "date-fns",
     ],
   },
 

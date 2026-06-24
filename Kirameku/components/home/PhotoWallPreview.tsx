@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { getAlbums, getAlbumPhotos } from "@/app/api";
+import { getAllPhotos } from "@/app/api";
 
 interface Photo {
   id: number;
@@ -21,14 +21,9 @@ export default function PhotoWallPreview() {
   const isDragging = useRef(false);
 
   useEffect(() => {
-    getAlbums()
-      .then(async (albums) => {
-        const allPhotos: Photo[] = [];
-        for (const album of albums) {
-          const photos = await getAlbumPhotos(album.id);
-          if (photos?.length) allPhotos.push(...photos);
-        }
-        if (allPhotos.length) setPhotos(allPhotos.reverse());
+    getAllPhotos()
+      .then((data) => {
+        if (data?.length) setPhotos(data);
       })
       .catch(() => {});
   }, []);

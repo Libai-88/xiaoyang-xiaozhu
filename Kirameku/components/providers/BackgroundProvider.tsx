@@ -52,11 +52,11 @@ export function BackgroundProvider({ children }: { children: ReactNode }) {
     }
   }, [bgBlur, mounted]);
 
-  if (!mounted) return null;
-
   return (
     <BackgroundContext.Provider value={{ bgImage, bgBlur, setBgImage, setBgBlur }}>
-      {children}
+      <div style={{ visibility: mounted ? "visible" : "hidden" }}>
+        {children}
+      </div>
     </BackgroundContext.Provider>
   );
 }

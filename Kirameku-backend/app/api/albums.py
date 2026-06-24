@@ -14,6 +14,11 @@ def list_albums(session: Session = Depends(get_session)):
     return album_service.get_albums(session)
 
 
+@router.get("/all-photos", response_model=list[PhotoOut])
+def get_all_photos(session: Session = Depends(get_session)):
+    return album_service.get_all_photos(session)
+
+
 @router.get("/{album_id}", response_model=AlbumOut)
 def get_album(album_id: int, session: Session = Depends(get_session)):
     return album_service.get_album_by_id(session, album_id)

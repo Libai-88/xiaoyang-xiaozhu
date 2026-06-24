@@ -57,7 +57,7 @@ export default function LatestChatterCarousel() {
   const didDrag = useRef(false);
 
   useEffect(() => {
-    getChatters({ status: "published", page: 1, size: 50 })
+    getChatters({ status: "published", page: 1, size: 10 })
       .then((data) => {
         if (!data.length) return;
         const latestDate = data[0].created_at.slice(0, 10);

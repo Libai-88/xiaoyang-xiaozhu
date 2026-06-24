@@ -44,6 +44,8 @@ export default function SeasonalEffect() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    let running = true;
+
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -53,11 +55,11 @@ export default function SeasonalEffect() {
 
     const s = season.current.name;
     const isMobile = window.innerWidth < 768;
-    const maxParticles = isMobile ? 20 : 40;
+    const MAX_PARTICLES = isMobile ? 20 : 40;
 
     // Pre-fill particles
     particles.current = [];
-    for (let i = 0; i < maxParticles; i++) {
+    for (let i = 0; i < MAX_PARTICLES; i++) {
       const x = Math.random() * canvas.width;
       const y = Math.random() * canvas.height;
       const speed = 0.3 + Math.random() * 0.6;
@@ -217,6 +219,7 @@ export default function SeasonalEffect() {
     };
 
     const drawFirefly = (p: Particle) => {
+      ctx.save();
       const glow = Math.sin(Date.now() * 0.003 + p.phase) * 0.5 + 0.5;
       ctx.globalAlpha = p.opacity * glow;
       const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 4);
@@ -227,7 +230,6 @@ export default function SeasonalEffect() {
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.size * 4, 0, Math.PI * 2);
       ctx.fill();
-      ctx.globalAlpha = 1;
       ctx.restore();
     };
 
@@ -256,11 +258,11 @@ export default function SeasonalEffect() {
 
     let frameCount = 0;
     const loop = () => {
+      if (!running) return;
       frameCount++;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      const max = isMobile ? 25 : 50;
-      if (particles.current.length < max) {
+      if (particles.current.length < MAX_PARTICLES) {
         const spawnRate = isMobile ? 60 : 30;
         if (frameCount % spawnRate === 0) {
           switch (s) {
@@ -294,8 +296,19 @@ export default function SeasonalEffect() {
     };
     loop();
 
+    const handleVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(animFrame.current);
+      } else {
+        loop();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+
     return () => {
+      running = false;
       window.removeEventListener("resize", resize);
+      document.removeEventListener("visibilitychange", handleVisibility);
       cancelAnimationFrame(animFrame.current);
     };
   }, [disabled]);

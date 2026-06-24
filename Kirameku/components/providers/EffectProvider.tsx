@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from "react";
 
 interface EffectContextType {
   clickEffect: boolean;
@@ -42,36 +42,42 @@ export function EffectProvider({ children }: { children: ReactNode }) {
     if (savedSparkle !== null) setSparkleEffect(savedSparkle === "true");
   }, []);
 
-  const toggleClickEffect = () => {
+  const toggleClickEffect = useCallback(() => {
     setClickEffect((prev) => {
       localStorage.setItem("clickEffect", String(!prev));
       return !prev;
     });
-  };
+  }, []);
 
-  const toggleMouseTrail = () => {
+  const toggleMouseTrail = useCallback(() => {
     setMouseTrail((prev) => {
       localStorage.setItem("mouseTrail", String(!prev));
       return !prev;
     });
-  };
+  }, []);
 
-  const toggleSeasonalEffect = () => {
+  const toggleSeasonalEffect = useCallback(() => {
     setSeasonalEffect((prev) => {
       localStorage.setItem("seasonalEffect", String(!prev));
       return !prev;
     });
-  };
+  }, []);
 
-  const toggleSparkleEffect = () => {
+  const toggleSparkleEffect = useCallback(() => {
     setSparkleEffect((prev) => {
       localStorage.setItem("sparkleEffect", String(!prev));
       return !prev;
     });
-  };
+  }, []);
+
+  const value = useMemo(() => ({
+    clickEffect, mouseTrail, seasonalEffect, sparkleEffect,
+    toggleClickEffect, toggleMouseTrail, toggleSeasonalEffect, toggleSparkleEffect,
+  }), [clickEffect, mouseTrail, seasonalEffect, sparkleEffect,
+       toggleClickEffect, toggleMouseTrail, toggleSeasonalEffect, toggleSparkleEffect]);
 
   return (
-    <EffectContext.Provider value={{ clickEffect, mouseTrail, seasonalEffect, sparkleEffect, toggleClickEffect, toggleMouseTrail, toggleSeasonalEffect, toggleSparkleEffect }}>
+    <EffectContext.Provider value={value}>
       {children}
     </EffectContext.Provider>
   );

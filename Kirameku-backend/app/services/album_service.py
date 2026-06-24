@@ -10,6 +10,14 @@ def get_albums(session: Session) -> list[Album]:
     return list(session.exec(select(Album).order_by(Album.sort)).all())
 
 
+def get_all_photos(session: Session) -> list[Photo]:
+    return list(
+        session.exec(
+            select(Photo).order_by(Photo.sort.desc())
+        ).all()
+    )
+
+
 def get_album_by_id(session: Session, album_id: int) -> Album:
     album = session.get(Album, album_id)
     if not album:
