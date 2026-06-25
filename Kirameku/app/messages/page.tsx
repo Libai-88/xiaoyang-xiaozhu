@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -70,7 +70,7 @@ function relativeTime(dateStr: string): string {
   return `${days}天前`;
 }
 
-export default function MessagesPage() {
+function MessagesContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -651,5 +651,31 @@ function ReplyCard({
         </div>
       </div>
     </div>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6 md:py-12">
+      <div className="mb-5 md:mb-10">
+        <div className="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
+          <Newspaper className="w-5 h-5 md:w-7 md:h-7 text-sky-500" />
+          <h1 className="text-xl md:text-3xl font-bold text-slate-800 dark:text-slate-100">悄悄话</h1>
+        </div>
+      </div>
+      <div className="space-y-3">
+        {[1, 2].map((i) => (
+          <div key={i} className="h-24 rounded-2xl bg-white/30 dark:bg-slate-800/30 animate-pulse" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function MessagesPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <MessagesContent />
+    </Suspense>
   );
 }

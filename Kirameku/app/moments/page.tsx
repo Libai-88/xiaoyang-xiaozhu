@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -83,6 +83,14 @@ function flattenReplies(
 }
 
 export default function MomentsPage() {
+  return (
+    <Suspense fallback={<div className="max-w-2xl mx-auto px-4 py-12 text-center text-slate-400">加载中...</div>}>
+      <MomentsContent />
+    </Suspense>
+  );
+}
+
+function MomentsContent() {
   const [moments, setMoments] = useState<Moment[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
