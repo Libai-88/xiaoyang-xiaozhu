@@ -1,12 +1,21 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { projects } from "./projectsData";
+import { getProjects, type ProjectItem } from "@/app/api";
 import { FolderGit2, ExternalLink } from "lucide-react";
 
 export default function ProjectsPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [projects, setProjects] = useState<ProjectItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getProjects()
+      .then(setProjects)
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
 
   const filtered = useMemo(() => {
     if (!searchQuery.trim()) return projects;
@@ -15,9 +24,9 @@ export default function ProjectsPage() {
       (p) =>
         p.name.toLowerCase().includes(q) ||
         p.description.toLowerCase().includes(q) ||
-        p.techStack.some((t) => t.toLowerCase().includes(q))
+        p.tech_stack.some((t) => t.toLowerCase().includes(q))
     );
-  }, [searchQuery]);
+  }, [searchQuery, projects]);
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-12 relative z-10">
@@ -83,9 +92,9 @@ export default function ProjectsPage() {
                   </h2>
                   {/* 链接图标 */}
                   <div className="flex items-center gap-2 md:gap-2.5 flex-shrink-0">
-                    {project.links.github && (
+                    {project.link_github && (
                       <a
-                        href={project.links.github}
+                        href={project.link_github}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors duration-300"
@@ -96,9 +105,9 @@ export default function ProjectsPage() {
                         </svg>
                       </a>
                     )}
-                    {project.links.gitee && (
+                    {project.link_gitee && (
                       <a
-                        href={project.links.gitee}
+                        href={project.link_gitee}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors duration-300"
@@ -109,9 +118,9 @@ export default function ProjectsPage() {
                         </svg>
                       </a>
                     )}
-                    {project.links.live && (
+                    {project.link_live && (
                       <a
-                        href={project.links.live}
+                        href={project.link_live}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors duration-300"
@@ -128,7 +137,7 @@ export default function ProjectsPage() {
                 </p>
 
                 <div className="flex flex-wrap gap-1.5 md:gap-2 relative z-10">
-                  {project.techStack.map((tag) => (
+                  {project.tech_stack.map((tag) => (
                     <span
                       key={tag}
                       className="text-[9px] md:text-[10px] font-bold tracking-wider uppercase text-sky-600 dark:text-sky-400 bg-sky-500/10 px-2 py-0.5 md:px-3 md:py-1 rounded-md border border-sky-500/20"
@@ -142,14 +151,20 @@ export default function ProjectsPage() {
           ))}
         </AnimatePresence>
 
-        {filtered.length === 0 && (
+        {!loading && filtered.length === 0 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="col-span-full text-center py-12 md:py-20 text-slate-600 dark:text-slate-300 font-medium text-xs md:text-sm"
           >
-            没有找到匹配 [{searchQuery}] 的项目...
+            {projects.length === 0 ? "暂无项目，请在后台添加" : `没有找到匹配 [${searchQuery}] 的项目...`}
           </motion.div>
+        )}
+
+        {loading && (
+          <div className="col-span-full flex justify-center py-12">
+            <div className="w-6 h-6 border-2 border-sky-500 border-t-transparent rounded-full animate-spin" />
+          </div>
         )}
       </motion.div>
     </div>
