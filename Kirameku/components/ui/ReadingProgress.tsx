@@ -15,13 +15,25 @@ interface ReadingProgressProps {
 }
 
 export default function ReadingProgress({ contentRef }: ReadingProgressProps) {
-  const [progress, setProgress] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [headings, setHeadings] = useState<TOCItem[]>([]);
   const [activeId, setActiveId] = useState<string>("");
   const [showTOC, setShowTOC] = useState(false);
   const tocRef = useRef<HTMLDivElement>(null);
   const tocButtonRef = useRef<HTMLDivElement>(null);
+  // 进度条直接用 ref 写 transform（scaleX），避免每帧 setState 触发 React 重渲染
+  const barRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef(0);
+
+  const updateProgressBar = (percent: number) => {
+    if (rafRef.current) return;
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = 0;
+      if (barRef.current) {
+        barRef.current.style.transform = `scaleX(${Math.min(percent, 100) / 100})`;
+      }
+    });
+  };
 
   // 提取标题
   useEffect(() => {
@@ -49,7 +61,7 @@ export default function ReadingProgress({ contentRef }: ReadingProgressProps) {
       const scrollTop = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-      setProgress(Math.min(scrollPercent, 100));
+      updateProgressBar(scrollPercent);
       setShowBackToTop(scrollTop > 300);
 
       // 更新活跃标题
@@ -71,7 +83,10 @@ export default function ReadingProgress({ contentRef }: ReadingProgressProps) {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
   }, [contentRef]);
 
   // 点击外部关闭目录
@@ -113,14 +128,12 @@ export default function ReadingProgress({ contentRef }: ReadingProgressProps) {
 
   return (
     <>
-      {/* 阅读进度条 */}
+      {/* 阅读进度条：scaleX + transform-origin，滚动时 rAF 直写样式，走合成器 */}
       <div className="fixed top-0 left-0 w-full h-1 z-50">
-        <motion.div
-          className="h-full bg-gradient-to-r from-sky-500 to-indigo-500"
-          style={{ width: `${progress}%` }}
-          initial={{ width: 0 }}
-          animate={{ width: `${progress}%` }}
-          transition={{ duration: 0.1 }}
+        <div
+          ref={barRef}
+          className="h-full origin-left bg-gradient-to-r from-sky-500 to-indigo-500 transition-transform duration-100 will-change-transform"
+          style={{ transform: "scaleX(0)" }}
         />
       </div>
 

@@ -101,6 +101,8 @@ export default function BookmarkPage() {
                         <img
                           src={getIcon(site)}
                           alt={site.name}
+                          loading="lazy"
+                          decoding="async"
                           className="w-full h-full object-cover"
                           onError={e => {
                             const t = e.target as HTMLImageElement;

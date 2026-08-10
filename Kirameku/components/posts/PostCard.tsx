@@ -1,8 +1,13 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useMotionTemplate,
+} from "framer-motion";
 import { Eye, Heart, Clock, Pin } from "lucide-react";
 
 export interface PostOut {
@@ -31,8 +36,15 @@ interface PostCardProps {
 
 export default function PostCard({ post, index }: PostCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 });
-  const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
+
+  // 3D 倾斜用 motion values 驱动（弹簧平滑），mousemove 不再触发 React 重渲染
+  const rotateX = useSpring(useMotionValue(0), { stiffness: 300, damping: 25 });
+  const rotateY = useSpring(useMotionValue(0), { stiffness: 300, damping: 25 });
+  const glareX = useMotionValue(50);
+  const glareY = useMotionValue(50);
+  const glareOpacity = useSpring(useMotionValue(0), { stiffness: 300, damping: 25 });
+  const tiltTransform = useMotionTemplate`rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  const glareBackground = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,${glareOpacity}), transparent 60%)`;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
@@ -41,19 +53,19 @@ export default function PostCard({ post, index }: PostCardProps) {
     const y = e.clientY - rect.top;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -6;
-    const rotateY = ((x - centerX) / centerX) * 6;
-    setTilt({ rotateX, rotateY });
-    setGlare({
-      x: (x / rect.width) * 100,
-      y: (y / rect.height) * 100,
-      opacity: 0.15,
-    });
+    rotateX.set(((y - centerY) / centerY) * -6);
+    rotateY.set(((x - centerX) / centerX) * 6);
+    glareX.set((x / rect.width) * 100);
+    glareY.set((y / rect.height) * 100);
+    glareOpacity.set(0.15);
   };
 
   const handleMouseLeave = () => {
-    setTilt({ rotateX: 0, rotateY: 0 });
-    setGlare({ x: 50, y: 50, opacity: 0 });
+    rotateX.set(0);
+    rotateY.set(0);
+    glareX.set(50);
+    glareY.set(50);
+    glareOpacity.set(0);
   };
 
   const dateStr = post.published_at
@@ -83,10 +95,10 @@ export default function PostCard({ post, index }: PostCardProps) {
             transformStyle: "preserve-3d",
           }}
         >
-          <div
-            className="relative transition-transform duration-200 ease-out"
+          <motion.div
+            className="relative"
             style={{
-              transform: `rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg)`,
+              transform: tiltTransform,
               transformStyle: "preserve-3d",
             }}
           >
@@ -139,30 +151,12 @@ export default function PostCard({ post, index }: PostCardProps) {
               </div>
             </div>
 
-            {/* 标签栏
-            {post.tags.length > 0 && (
-              <div className="px-5 py-3 bg-white/5 dark:bg-white/[0.03] backdrop-blur-xl border-t border-white/10">
-                <div className="flex flex-wrap gap-1.5">
-                  {post.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-2 py-0.5 rounded-full text-xs bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )} */}
-
-            {/* 3D 光泽效果 */}
-            <div
-              className="absolute inset-0 pointer-events-none rounded-3xl transition-opacity duration-200"
-              style={{
-                background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255,255,255,${glare.opacity}), transparent 60%)`,
-              }}
+            {/* 3D 光泽效果（motion value 驱动，无重渲染） */}
+            <motion.div
+              className="absolute inset-0 pointer-events-none rounded-3xl"
+              style={{ background: glareBackground }}
             />
-          </div>
+          </motion.div>
         </div>
       </Link>
     </motion.div>

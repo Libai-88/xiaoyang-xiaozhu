@@ -30,12 +30,15 @@ interface Particle {
 
 export default function SeasonalEffect() {
   const pathname = usePathname();
-  const { seasonalEffect } = useEffects();
+  const { seasonalEffect, animationQuality } = useEffects();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particles = useRef<Particle[]>([]);
   const animFrame = useRef<number>(0);
   const season = useRef(getSeason());
-  const disabled = pathname?.startsWith("/garden/") || !seasonalEffect;
+  const reducedMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const disabled = pathname?.startsWith("/garden/") || !seasonalEffect || reducedMotion;
 
   useEffect(() => {
     if (disabled) return;
@@ -45,23 +48,35 @@ export default function SeasonalEffect() {
     if (!ctx) return;
 
     let running = true;
+    // DPR 上限 2：高分屏更清晰，同时避免 3x 及以上画布带来的额外填充开销
+    const DPR = Math.min(window.devicePixelRatio || 1, 2);
+    let W = window.innerWidth;
+    let H = window.innerHeight;
 
     const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W * DPR;
+      canvas.height = H * DPR;
+      canvas.style.width = `${W}px`;
+      canvas.style.height = `${H}px`;
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     };
     resize();
     window.addEventListener("resize", resize);
 
     const s = season.current.name;
     const isMobile = window.innerWidth < 768;
-    const MAX_PARTICLES = isMobile ? 20 : 40;
+    // 轻盈模式粒子数减半（持续全屏重绘的主要成本在粒子数量）
+    const MAX_PARTICLES = animationQuality === "light"
+      ? (isMobile ? 10 : 20)
+      : (isMobile ? 20 : 40);
 
     // Pre-fill particles
     particles.current = [];
     for (let i = 0; i < MAX_PARTICLES; i++) {
-      const x = Math.random() * canvas.width;
-      const y = Math.random() * canvas.height;
+      const x = Math.random() * W;
+      const y = Math.random() * H;
       const speed = 0.3 + Math.random() * 0.6;
       let p: Particle;
 
@@ -218,15 +233,28 @@ export default function SeasonalEffect() {
       ctx.restore();
     };
 
+    // 按「颜色|半径」缓存萤火虫光晕渐变，避免每帧重复创建 radial gradient
+    const gradientCache = new Map<string, CanvasGradient>();
+    const getFireflyGradient = (p: Particle) => {
+      const radius = p.size * 4;
+      const key = `${p.color}|${Math.round(radius)}`;
+      let gradient = gradientCache.get(key);
+      if (!gradient) {
+        gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, radius);
+        gradient.addColorStop(0, p.color);
+        gradient.addColorStop(0.3, p.color.replace(")", ", 0.3)").replace("hsl", "hsla"));
+        gradient.addColorStop(1, "transparent");
+        if (gradientCache.size > 64) gradientCache.clear(); // 防无界增长
+        gradientCache.set(key, gradient);
+      }
+      return gradient;
+    };
+
     const drawFirefly = (p: Particle) => {
       ctx.save();
       const glow = Math.sin(Date.now() * 0.003 + p.phase) * 0.5 + 0.5;
       ctx.globalAlpha = p.opacity * glow;
-      const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 4);
-      gradient.addColorStop(0, p.color);
-      gradient.addColorStop(0.3, p.color.replace(")", ", 0.3)").replace("hsl", "hsla"));
-      gradient.addColorStop(1, "transparent");
-      ctx.fillStyle = gradient;
+      ctx.fillStyle = getFireflyGradient(p);
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.size * 4, 0, Math.PI * 2);
       ctx.fill();
@@ -260,16 +288,16 @@ export default function SeasonalEffect() {
     const loop = () => {
       if (!running) return;
       frameCount++;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, W, H);
 
       if (particles.current.length < MAX_PARTICLES) {
         const spawnRate = isMobile ? 60 : 30;
         if (frameCount % spawnRate === 0) {
           switch (s) {
-            case "spring": spawnPetal(canvas.width); break;
-            case "summer": spawnFirefly(canvas.width, canvas.height); break;
-            case "autumn": spawnLeaf(canvas.width); break;
-            default: spawnSnow(canvas.width); break;
+            case "spring": spawnPetal(W); break;
+            case "summer": spawnFirefly(W, H); break;
+            case "autumn": spawnLeaf(W); break;
+            default: spawnSnow(W); break;
           }
         }
       }
@@ -280,7 +308,7 @@ export default function SeasonalEffect() {
         p.rotation += p.rotationSpeed;
 
         const margin = 50;
-        return p.x > -margin && p.x < canvas.width + margin && p.y < canvas.height + margin;
+        return p.x > -margin && p.x < W + margin && p.y < H + margin;
       });
 
       for (const p of particles.current) {
@@ -311,7 +339,7 @@ export default function SeasonalEffect() {
       document.removeEventListener("visibilitychange", handleVisibility);
       cancelAnimationFrame(animFrame.current);
     };
-  }, [disabled]);
+  }, [disabled, animationQuality]);
 
   if (disabled) return null;
 

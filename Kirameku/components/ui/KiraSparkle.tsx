@@ -20,11 +20,14 @@ interface Sparkle {
 
 export default function KiraSparkle() {
   const pathname = usePathname();
-  const { sparkleEffect } = useEffects();
+  const { sparkleEffect, animationQuality } = useEffects();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sparkles = useRef<Sparkle[]>([]);
   const animFrame = useRef<number>(0);
-  const disabled = pathname?.startsWith("/garden/") || !sparkleEffect;
+  const reducedMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const disabled = pathname?.startsWith("/garden/") || !sparkleEffect || reducedMotion;
 
   useEffect(() => {
     if (disabled) return;
@@ -54,7 +57,7 @@ export default function KiraSparkle() {
     ];
 
     const spawnAt = (x: number, y: number) => {
-      const count = 10 + Math.floor(Math.random() * 12);
+      const count = animationQuality === "light" ? 5 : 10 + Math.floor(Math.random() * 12);
       for (let i = 0; i < count; i++) {
         const angle = Math.random() * Math.PI * 2;
         const speed = 1.5 + Math.random() * 3;
@@ -172,7 +175,7 @@ export default function KiraSparkle() {
       document.removeEventListener("visibilitychange", handleVisibility);
       cancelAnimationFrame(animFrame.current);
     };
-  }, [disabled]);
+  }, [disabled, animationQuality]);
 
   if (disabled) return null;
 

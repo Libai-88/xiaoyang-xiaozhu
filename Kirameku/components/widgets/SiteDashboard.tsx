@@ -31,9 +31,28 @@ export default function SiteDashboard() {
       setUptimeStr(`${days}天 ${hours}时${minutes}分${seconds}秒`);
     };
 
-    updateTime();
-    const timer = setInterval(updateTime, 1000);
-    return () => clearInterval(timer);
+    // 时钟需要秒级刷新，但页面隐藏时暂停，避免后台标签页持续空转
+    let timer: ReturnType<typeof setInterval> | null = null;
+    const start = () => {
+      if (!timer) {
+        updateTime();
+        timer = setInterval(updateTime, 1000);
+      }
+    };
+    const stop = () => {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    };
+
+    start();
+    const onVisibility = () => (document.hidden ? stop() : start());
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      stop();
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
   }, [START_DATE]);
 
   return (

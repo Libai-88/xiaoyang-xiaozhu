@@ -15,15 +15,18 @@ interface Particle {
 }
 
 export default function MouseTrail() {
-  const { mouseTrail } = useEffects();
+  const { mouseTrail, animationQuality } = useEffects();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particles = useRef<Particle[]>([]);
   const mouse = useRef({ x: 0, y: 0 });
   const frame = useRef(0);
   const isMobile = useRef(false);
+  const reducedMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   useEffect(() => {
-    if (!mouseTrail) return;
+    if (!mouseTrail || reducedMotion) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d")!;
@@ -41,8 +44,9 @@ export default function MouseTrail() {
 
     const handleMove = (e: MouseEvent) => {
       mouse.current = { x: e.clientX, y: e.clientY };
-      // 动态生成数量：粒子多时减少生成
-      const generateCount = particles.current.length > 100 ? 1 : 2;
+      // 动态生成数量：粒子多或轻盈模式时减少生成
+      const generateCount =
+        animationQuality === "light" || particles.current.length > 100 ? 1 : 2;
       for (let i = 0; i < generateCount; i++) {
         const angle = Math.random() * Math.PI * 2;
         const speed = Math.random() * 1.5 + 0.5;
@@ -130,9 +134,9 @@ export default function MouseTrail() {
       window.removeEventListener("mousemove", wrappedHandleMove);
       document.removeEventListener("visibilitychange", handleVisibility);
     };
-  }, [mouseTrail]);
+  }, [mouseTrail, animationQuality, reducedMotion]);
 
-  if (!mouseTrail) return null;
+  if (!mouseTrail || reducedMotion) return null;
 
   return (
     <canvas

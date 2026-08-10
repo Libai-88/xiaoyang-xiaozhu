@@ -47,7 +47,8 @@ input, textarea, [contenteditable], .prose, code, pre {
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 12px;
-  transition: all 0.3s ease;
+  /* 只过渡实际变化的属性，避免隐式过渡所有属性 */
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .glass-button:hover {
@@ -74,7 +75,7 @@ input, textarea, [contenteditable], .prose, code, pre {
   border-radius: 12px;
   padding: 0.75rem 1rem;
   outline: none;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .glass-input:focus {
@@ -118,32 +119,37 @@ input, textarea, [contenteditable], .prose, code, pre {
 }
 
 /* ========== 背景渐变动画 ========== */
+/* 用超大层 + transform 平移（GPU 合成），替代 background-position 全屏逐帧重绘 */
 
-@keyframes gradient-flow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+@keyframes gradient-pan {
+  0%   { transform: translate3d(-8%, -6%, 0); }
+  50%  { transform: translate3d(8%, 6%, 0); }
+  100% { transform: translate3d(-8%, -6%, 0); }
 }
 
 .gradient-background {
-  background-size: 400% 400%;
-  animation: gradient-flow 15s ease infinite;
+  /* 放大渐变层（超出视口 40%），平移时不会露出空隙 */
+  inset: -40%;
+  background-size: 100% 100%;
+  animation: gradient-pan 15s ease-in-out infinite;
+  will-change: transform;
 }
 
 /* ========== 文字截断（Tailwind CSS 4 已内置 line-clamp-*） ========== */
 
 /* ========== 暗色模式背景增强 ========== */
 
-.dark body {
+/* 伪元素层承载暗色渐变，transform 平移走合成器，不再每帧重绘 body 背景 */
+.dark body::before {
+  content: "";
+  position: fixed;
+  inset: -40%;
+  z-index: -100;
   background: linear-gradient(135deg, #0f0b2e 0%, #1a1145 25%, #0d1b3e 50%, #1e1145 75%, #0f0b2e 100%);
-  background-size: 400% 400%;
-  animation: gradient-flow 20s ease infinite;
+  background-size: 100% 100%;
+  animation: gradient-pan 20s ease-in-out infinite;
+  will-change: transform;
+  pointer-events: none;
 }
 
 /* Live2D 看板娘层级 */
@@ -186,7 +192,7 @@ input, textarea, [contenteditable], .prose, code, pre {
 
 .recharts-pie-sector:hover {
   transform: scale(1.06);
-  filter: brightness(1.1);
+  /* filter 会触发重绘，hover 只保留合成的 scale */
 }
 
 .recharts-dot {
@@ -221,4 +227,34 @@ input, textarea, [contenteditable], .prose, code, pre {
   60%  { transform: rotate(-4deg) scale(1.02); transform-origin: bottom left; }
   75%  { transform: rotate(2deg) scale(1.01); transform-origin: bottom right; }
   100% { transform: rotate(0deg) scale(1); }
+}
+
+/* ========== 轻盈动画模式（设置面板手动切换，localStorage 持久化） ========== */
+
+/* 停用背景流动动画（body::before 是暗色渐变层） */
+body.anim-light .gradient-background,
+body.anim-light::before {
+  animation: none;
+}
+
+/* 停用看板娘对话气泡的持续摇晃 */
+body.anim-light #waifu-tips {
+  animation: none !important;
+}
+
+/* ========== 系统开启「减少动态效果」时，停用全部装饰性动画 ========== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .gradient-background,
+  .dark body::before {
+    animation: none;
+  }
 }

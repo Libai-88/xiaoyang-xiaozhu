@@ -8,7 +8,7 @@ import { siteConfig } from "@/siteConfig";
 
 export default function SettingsPanel({ onClose }: { onClose: () => void }) {
   const { bgImage, bgBlur, setBgImage, setBgBlur } = useBackground();
-  const { clickEffect, mouseTrail, seasonalEffect, sparkleEffect, toggleClickEffect, toggleMouseTrail, toggleSeasonalEffect, toggleSparkleEffect } = useEffects();
+  const { clickEffect, mouseTrail, seasonalEffect, sparkleEffect, animationQuality, toggleClickEffect, toggleMouseTrail, toggleSeasonalEffect, toggleSparkleEffect, setAnimationQuality } = useEffects();
   const images = siteConfig.bgImages;
   const currentIndex = images.indexOf(bgImage);
   const [showGrid, setShowGrid] = useState(false);
@@ -148,6 +148,32 @@ export default function SettingsPanel({ onClose }: { onClose: () => void }) {
             {bgBlur}px
           </span>
         </div>
+      </div>
+
+      {/* 动画质量 */}
+      <div className="mb-4">
+        <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2 block">
+          动画效果
+        </label>
+        <div className="flex items-center bg-white/40 dark:bg-slate-800/40 rounded-lg p-0.5">
+          {(["standard", "light"] as const).map((q) => (
+            <button
+              key={q}
+              type="button"
+              onClick={() => setAnimationQuality(q)}
+              className={`flex-1 px-2 py-1.5 rounded-md text-xs font-medium transition-all ${
+                animationQuality === q
+                  ? "bg-white dark:bg-slate-600 text-slate-700 dark:text-slate-200 shadow-sm"
+                  : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+              }`}
+            >
+              {q === "standard" ? "标准" : "轻盈"}
+            </button>
+          ))}
+        </div>
+        <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1.5 leading-relaxed">
+          轻盈模式停用背景流动与看板娘摇晃，粒子数量减半，更省电流畅
+        </p>
       </div>
 
       {/* 鼠标效果开关 */}

@@ -29,11 +29,14 @@ const MAX_PARTICLES = 100;
 
 export default function ClickEffect() {
   const pathname = usePathname();
-  const { clickEffect } = useEffects();
+  const { clickEffect, animationQuality } = useEffects();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particles = useRef<Particle[]>([]);
   const animFrame = useRef<number>(0);
-  const disabled = pathname?.startsWith("/garden/") || !clickEffect;
+  const reducedMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const disabled = pathname?.startsWith("/garden/") || !clickEffect || reducedMotion;
 
   useEffect(() => {
     if (disabled) return;
@@ -43,6 +46,8 @@ export default function ClickEffect() {
     if (!ctx) return;
 
     let running = true;
+    // 轻盈模式：每次点击的粒子数减半，总量上限减半
+    const MAX = animationQuality === "light" ? 50 : MAX_PARTICLES;
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -52,9 +57,9 @@ export default function ClickEffect() {
     window.addEventListener("resize", resize);
 
     const spawn = (x: number, y: number) => {
-      const count = 8 + Math.floor(Math.random() * 6);
+      const count = animationQuality === "light" ? 4 : 8 + Math.floor(Math.random() * 6);
       for (let i = 0; i < count; i++) {
-        if (particles.current.length >= MAX_PARTICLES) break;
+        if (particles.current.length >= MAX) break;
         const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
         const speed = 2 + Math.random() * 4;
         particles.current.push({
@@ -119,7 +124,7 @@ export default function ClickEffect() {
       document.removeEventListener("visibilitychange", handleVisibility);
       cancelAnimationFrame(animFrame.current);
     };
-  }, [disabled]);
+  }, [disabled, animationQuality]);
 
   if (disabled) return null;
 

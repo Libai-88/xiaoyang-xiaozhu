@@ -117,6 +117,8 @@ function SearchContent() {
                     alt={book.name}
                     width={80}
                     height={112}
+                    loading="lazy"
+                    decoding="async"
                     className="rounded-lg object-cover flex-shrink-0"
                   />
                 ) : (

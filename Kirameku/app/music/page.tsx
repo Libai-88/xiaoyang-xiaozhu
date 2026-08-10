@@ -169,7 +169,7 @@ export default function MusicPage() {
                 className="w-[72px] h-[72px] md:w-24 md:h-24 rounded-full overflow-hidden shadow-inner"
                 style={{ animation: isPlaying ? "spin 8s linear infinite" : "none" }}
               >
-                <img src={currentSong.cover} alt="" className="w-full h-full object-cover" />
+                <img src={currentSong.cover} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
               </div>
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white/80 shadow" />
             </div>
@@ -335,7 +335,7 @@ export default function MusicPage() {
                     </div>
                     {/* Cover */}
                     <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg overflow-hidden shrink-0 shadow-sm">
-                      <img src={song.cover} alt="" className="w-full h-full object-cover" />
+                      <img src={song.cover} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
                     </div>
                     {/* Info */}
                     <div className="flex-1 min-w-0">

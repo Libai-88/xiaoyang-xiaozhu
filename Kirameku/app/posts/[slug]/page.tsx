@@ -1,7 +1,7 @@
 "use client";
 
 import "highlight.js/styles/vs2015.css";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -71,6 +71,12 @@ export default function PostDetailPage() {
   });
   const contentRef = useRef<HTMLDivElement>(null);
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+
+  // 文章 Markdown 只解析一次：点赞/评论/灯箱等交互触发重渲染时不再反复解析全文
+  const contentHtml = useMemo(
+    () => (post ? (marked.parse(post.content) as string) : ""),
+    [post]
+  );
 
   useEffect(() => {
     if (!slug) return;
@@ -363,7 +369,7 @@ export default function PostDetailPage() {
             <div
               className="post-content prose prose-sm sm:prose-base md:prose-lg dark:prose-invert max-w-none text-slate-800 dark:text-slate-200 leading-relaxed"
               onClick={handleContentClick}
-              dangerouslySetInnerHTML={{ __html: marked.parse(post.content) as string }}
+              dangerouslySetInnerHTML={{ __html: contentHtml }}
             />
           </div>
         </div>

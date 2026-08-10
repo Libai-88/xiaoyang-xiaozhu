@@ -84,6 +84,10 @@ export default function TimelinePage() {
   const [allPosts, setAllPosts] = useState<PostItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  // 分页：首批 100 篇，滚动到底可加载更多
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const dragXRef = useRef(0);
   const didDrag = useRef(false);
   const [visibleRangeKey, setVisibleRangeKey] = useState(0);
@@ -102,11 +106,27 @@ export default function TimelinePage() {
   }, []);
 
   useEffect(() => {
-    getPosts({ status: "published", page: 1, size: 200 })
-      .then(setAllPosts)
+    getPosts({ status: "published", page: 1, size: 100 })
+      .then((data) => {
+        setAllPosts(data);
+        setHasMore(data.length >= 100);
+      })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
+
+  const loadMore = useCallback(() => {
+    if (loadingMore) return;
+    setLoadingMore(true);
+    getPosts({ status: "published", page: page + 1, size: 100 })
+      .then((data) => {
+        setAllPosts((prev) => [...prev, ...data]);
+        setHasMore(data.length >= 100);
+        setPage((p) => p + 1);
+      })
+      .catch(() => {})
+      .finally(() => setLoadingMore(false));
+  }, [page, loadingMore]);
 
   const sorted = useMemo(
     () =>
@@ -310,28 +330,7 @@ export default function TimelinePage() {
                 <stop offset="95%" stopColor="#38bdf8" stopOpacity="0.3" />
                 <stop offset="100%" stopColor="#38bdf8" stopOpacity="0" />
               </linearGradient>
-              {!isMobile && (
-                <>
-                  <filter
-                    id="river-glow"
-                    x="-5%"
-                    y="-20%"
-                    width="110%"
-                    height="140%"
-                  >
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="6" />
-                  </filter>
-                  <filter
-                    id="dot-glow"
-                    x="-100%"
-                    y="-100%"
-                    width="300%"
-                    height="300%"
-                  >
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
-                  </filter>
-                </>
-              )}
+              {/* 发光效果改用多层半透明描边模拟，去掉 feGaussianBlur（拖拽时每帧重滤波很贵） */}
             </defs>
 
             {/* 河流主体 */}
@@ -345,19 +344,30 @@ export default function TimelinePage() {
               animate={{ pathLength: 1 }}
               transition={{ duration: 1.8, ease: "easeInOut" }}
             />
-            {/* 河流发光层（PC） */}
+            {/* 河流发光层（PC）：两层半透明描边模拟光晕，无 blur 滤镜 */}
             {!isMobile && (
-              <motion.path
-                d={riverPath}
-                fill="none"
-                stroke="url(#river-grad)"
-                strokeWidth="20"
-                filter="url(#river-glow)"
-                opacity="0.3"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 1.8, ease: "easeInOut" }}
-              />
+              <>
+                <motion.path
+                  d={riverPath}
+                  fill="none"
+                  stroke="url(#river-grad)"
+                  strokeWidth="12"
+                  opacity="0.12"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 1.8, ease: "easeInOut" }}
+                />
+                <motion.path
+                  d={riverPath}
+                  fill="none"
+                  stroke="url(#river-grad)"
+                  strokeWidth="5"
+                  opacity="0.2"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 1.8, ease: "easeInOut" }}
+                />
+              </>
             )}
             {/* 河流底部微光 */}
             <motion.path
@@ -371,17 +381,13 @@ export default function TimelinePage() {
               transition={{ duration: 1.8, ease: "easeInOut" }}
             />
 
-            {/* 流动粒子：移动端完全禁用，PC 减少数量 */}
+            {/* 流动粒子：移动端完全禁用，PC 减少数量；光晕用大小圆叠层代替 blur */}
             {!isMobile && (
               <>
                 {[0, 0.3, 0.6].map((offset, i) => (
-                  <circle
-                    key={i}
-                    r="3"
-                    fill="#38bdf8"
-                    opacity="0.7"
-                    filter="url(#dot-glow)"
-                  >
+                  <g key={i}>
+                    <circle r="6" fill="#38bdf8" opacity="0.15" />
+                    <circle r="2.5" fill="#38bdf8" opacity="0.8" />
                     <animateMotion
                       dur={`${8 + i * 1.5}s`}
                       repeatCount="indefinite"
@@ -389,7 +395,7 @@ export default function TimelinePage() {
                     >
                       <mpath href="#river-flow-path" />
                     </animateMotion>
-                  </circle>
+                  </g>
                 ))}
                 <path
                   id="river-flow-path"
@@ -556,6 +562,27 @@ export default function TimelinePage() {
       >
         左右滑动浏览时光河流 · 点击文章卡片跳转阅读
       </motion.p>
+
+      {/* 加载更多（首批只拉 100 篇，增量补充） */}
+      {hasMore && (
+        <div className="flex justify-center mt-4">
+          <button
+            type="button"
+            onClick={loadMore}
+            disabled={loadingMore}
+            className="flex items-center gap-2 px-5 py-2 rounded-full bg-white/60 dark:bg-slate-800/60 backdrop-blur-md border border-slate-200/60 dark:border-white/10 text-xs text-slate-600 dark:text-slate-300 hover:border-sky-400 hover:text-sky-500 dark:hover:text-sky-400 transition-all disabled:opacity-50"
+          >
+            {loadingMore ? (
+              <>
+                <span className="w-3.5 h-3.5 border-2 border-sky-500 border-t-transparent rounded-full animate-spin" />
+                加载中…
+              </>
+            ) : (
+              <>加载更多文章</>
+            )}
+          </button>
+        </div>
+      )}
 
       <style>{`
         div::-webkit-scrollbar { display: none; }

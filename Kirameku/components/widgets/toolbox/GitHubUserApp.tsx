@@ -159,7 +159,7 @@ export default function GitHubUserApp() {
           {/* 用户头像 + 基本信息 */}
           <div className="rounded-xl bg-gradient-to-br from-slate-500/10 to-slate-500/5 dark:from-slate-500/20 dark:to-slate-500/10 border border-slate-200/50 dark:border-white/5 p-3">
             <div className="flex items-center gap-3">
-              <img src={result.avatar_url} alt={result.login} className="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700" />
+              <img src={result.avatar_url} alt={result.login} loading="lazy" decoding="async" className="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700" />
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
                   <a href={result.html_url} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-slate-800 dark:text-slate-200 hover:text-sky-500 transition-colors truncate">

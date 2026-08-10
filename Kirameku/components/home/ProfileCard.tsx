@@ -20,6 +20,8 @@ export default function ProfileCard({
               <img
                 src={siteConfig.avatarUrl}
                 alt="avatar"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full rounded-full object-cover bg-white dark:bg-slate-800"
               />
             </div>

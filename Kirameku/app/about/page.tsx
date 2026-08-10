@@ -42,6 +42,8 @@ export default async function AboutPage() {
           <img
             src={coverImage}
             alt="About Hero"
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover opacity-90 transition-transform duration-1000 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
@@ -53,6 +55,8 @@ export default async function AboutPage() {
             <img
               src={siteConfig.avatarUrl}
               alt="avatar"
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover"
             />
           </div>

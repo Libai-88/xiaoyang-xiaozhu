@@ -184,6 +184,8 @@ export default function FriendsPage() {
                     <img
                       src={active.avatar}
                       alt={active.name}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full rounded-full object-cover bg-white dark:bg-slate-800"
                     />
                   ) : (

@@ -7,7 +7,7 @@ import AlbumCard from "@/components/photos/AlbumCard";
 import type { Album } from "@/components/photos/AlbumCard";
 import Lightbox from "@/components/photos/Lightbox";
 import type { Photo } from "@/data/photos";
-import { getAlbums, getAlbumPhotos } from "@/app/api";
+import { getAlbums, getAllPhotos, type PhotoItem } from "@/app/api";
 
 export default function PhotoWallPage() {
   const [albums, setAlbums] = useState<Album[]>([]);
@@ -33,26 +33,31 @@ export default function PhotoWallPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const albumList = await getAlbums();
+        // 一次请求拿全部照片（后端 all-photos 批量接口），不再按相册 N+1
+        const [albumList, allPhotos] = await Promise.all([getAlbums(), getAllPhotos()]);
         albumList.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
 
-        const results = await Promise.all(
-          albumList.map(async (album) => {
-            const photos = await getAlbumPhotos(album.id);
-            return {
-              id: album.id,
-              title: album.title,
-              updatedAt: album.updated_at,
-              photoCount: album.photo_count,
-              photos: photos.reverse().map((p) => ({
-                id: String(p.id),
-                url: p.url,
-                caption: p.caption,
-                orientation: (p.orientation as Photo["orientation"]) || "landscape",
-              })),
-            };
-          })
-        );
+        const photosByAlbum = new Map<number, PhotoItem[]>();
+        for (const p of allPhotos) {
+          const arr = photosByAlbum.get(p.album_id) ?? [];
+          arr.push(p);
+          photosByAlbum.set(p.album_id, arr);
+        }
+
+        const results = albumList.map((album) => ({
+          id: album.id,
+          title: album.title,
+          updatedAt: album.updated_at,
+          photoCount: album.photo_count,
+          photos: (photosByAlbum.get(album.id) ?? [])
+            .reverse()
+            .map((p) => ({
+              id: String(p.id),
+              url: p.url,
+              caption: p.caption,
+              orientation: (p.orientation as Photo["orientation"]) || "landscape",
+            })),
+        }));
 
         setAlbums(results);
       } catch {

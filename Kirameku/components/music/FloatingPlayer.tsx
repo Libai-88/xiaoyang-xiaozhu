@@ -88,7 +88,7 @@ export default function FloatingPlayer() {
           <div className="flex items-center gap-1.5 h-12 pl-1 pr-1.5 rounded-full bg-white/80 dark:bg-slate-900/90 backdrop-blur-xl border border-white/40 dark:border-white/10 shadow-2xl select-none">
             {/* Cover */}
             <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 shadow-sm cursor-grab active:cursor-grabbing">
-              <img src={currentSong.cover} alt="" className="w-full h-full object-cover pointer-events-none" draggable={false} />
+              <img src={currentSong.cover} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover pointer-events-none" draggable={false} />
             </div>
 
             {/* Info */}
@@ -172,7 +172,7 @@ export default function FloatingPlayer() {
                   }`}
                 >
                   <div className="w-7 h-7 rounded overflow-hidden shrink-0">
-                    <img src={song.cover} alt="" className="w-full h-full object-cover" />
+                    <img src={song.cover} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className={`text-[11px] font-bold truncate ${i === currentIndex ? "text-indigo-600 dark:text-indigo-300" : "text-slate-800 dark:text-slate-200"}`}>
@@ -198,7 +198,7 @@ export default function FloatingPlayer() {
           onClick={() => { if (!didDrag.current) setExpanded(true); }}
           className="w-12 h-12 rounded-full bg-white/50 dark:bg-slate-800/60 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl flex items-center justify-center select-none overflow-hidden cursor-pointer hover:shadow-2xl hover:scale-105 active:scale-95 transition-all duration-200"
         >
-          <img src={currentSong.cover} alt="" className="w-full h-full object-cover rounded-full pointer-events-none" draggable={false} />
+          <img src={currentSong.cover} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover rounded-full pointer-events-none" draggable={false} />
           {isPlaying && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-full">
               <div className="flex items-end gap-[2px] h-3">

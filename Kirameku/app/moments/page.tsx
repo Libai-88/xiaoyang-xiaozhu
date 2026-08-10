@@ -322,11 +322,12 @@ function MomentsContent() {
               const hasImages = moment.images && moment.images.length > 0;
 
               return (
-                <motion.div key={moment.id} layout
+                // 去掉 layout 动画（展开时整页重排）；stagger 延迟封顶，长列表不再排 2 秒队
+                <motion.div key={moment.id}
                   ref={(el) => { if (isExpanded && el) setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "nearest" }), 100); }}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0, rotate: isExpanded ? 0 : onlyViewId ? 0 : rot, x: isExpanded ? 0 : onlyViewId ? 0 : offsetX }}
-                  transition={{ type: "spring", stiffness: 300, damping: 25, delay: i * 0.05 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 25, delay: Math.min(i * 0.05, 0.6) }}
                   whileHover={!isExpanded && !onlyViewId ? { rotate: 0, x: 0, y: -4, scale: 1.01 } : undefined}
                   onClick={() => setExpandedId(isExpanded ? null : moment.id)}
                   className={`${group.moments.length > 1 && !onlyViewId ? "absolute left-0 right-0" : "relative"} cursor-pointer`}
