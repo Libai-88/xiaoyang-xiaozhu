@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { BookOpen, Clock, Eye, Heart } from "lucide-react";
 import { getPosts, type PostItem } from "@/app/api";
+import { postCoverFallback } from "@/components/ui/imageFallback";
 
 function relativeDate(dateStr: string | null): string {
   if (!dateStr) return "";
@@ -48,6 +49,7 @@ export default function LatestPostsCarousel() {
         <img
           src={hero.cover || "/images/default-cover.jpg"}
           alt={hero.title}
+          onError={postCoverFallback}
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           loading="eager"
         />
@@ -88,6 +90,7 @@ export default function LatestPostsCarousel() {
               <img
                 src={post.cover || "/images/default-cover.jpg"}
                 alt={post.title}
+                onError={postCoverFallback}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"
               />

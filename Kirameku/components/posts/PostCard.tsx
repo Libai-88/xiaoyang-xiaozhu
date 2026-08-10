@@ -9,6 +9,7 @@ import {
   useMotionTemplate,
 } from "framer-motion";
 import { Eye, Heart, Clock, Pin } from "lucide-react";
+import { postCoverFallback } from "@/components/ui/imageFallback";
 
 export interface PostOut {
   id: number;
@@ -107,6 +108,7 @@ export default function PostCard({ post, index }: PostCardProps) {
               <img
                 src={post.cover || "/images/default-cover.jpg"}
                 alt={post.title}
+                onError={postCoverFallback}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"
               />

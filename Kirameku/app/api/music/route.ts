@@ -60,22 +60,14 @@ export async function GET(req: NextRequest) {
           // ignore
         }
 
-        let cover = "";
-        try {
-          const picRaw = await meting.pic(track.pic_id, 300);
-          const picData = JSON.parse(picRaw as string);
-          cover = (picData.url || "").replace(/^http:\/\//, "https://");
-        } catch {
-          // ignore
-        }
-
         return {
           id: String(track.id),
           title: track.name || "未知歌曲",
           artist: Array.isArray(track.artist) ? track.artist.join(", ") : String(track.artist || "未知歌手"),
-          cover,
+          // 封面/歌词走本站代理，避免客户端直连网易 CDN 与第三方歌词 API 被网络阻断
+          cover: track.pic_id ? `/api/music/pic?id=${track.pic_id}` : "",
           src,
-          lrcUrl: track.lyric_id ? `https://api.injahow.cn/meting/?server=netease&type=lrc&id=${track.lyric_id}` : "",
+          lrcUrl: track.lyric_id ? `/api/music/lrc?id=${track.lyric_id}` : "",
         };
       })
     );

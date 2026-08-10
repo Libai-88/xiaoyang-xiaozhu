@@ -58,6 +58,7 @@ import {
 import { getPostBySlug, likePost, type PostDetail } from "@/app/api";
 import ReadingProgress from "@/components/ui/ReadingProgress";
 import PostComments from "@/components/posts/PostComments";
+import { postCoverFallback } from "@/components/ui/imageFallback";
 
 export default function PostDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -197,6 +198,7 @@ export default function PostDetailPage() {
             <img
               src={post.cover}
               alt={post.title}
+              onError={postCoverFallback}
               className="absolute inset-0 w-full h-full object-cover"
               loading="eager"
             />
