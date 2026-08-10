@@ -1,6 +1,10 @@
 // 根据角色动态生成路由
 import { defineFakeRoute } from "vite-plugin-fake-server/client";
 
+// mock 会话令牌：非真实凭据（真实认证由后端 JWT 完成），动态生成避免源码出现凭据字面量
+const mockSessionToken = (role: string) =>
+  `mock-session-${role}-${Date.now().toString(36)}`;
+
 export default defineFakeRoute([
   {
     url: "/login",
@@ -18,8 +22,8 @@ export default defineFakeRoute([
             roles: ["admin"],
             // 按钮级别权限
             permissions: ["*:*:*"],
-            accessToken: "eyJhbGciOiJIUzUxMiJ9.admin",
-            refreshToken: "eyJhbGciOiJIUzUxMiJ9.adminRefresh",
+            accessToken: mockSessionToken("admin"),
+            refreshToken: mockSessionToken("admin"),
             expires: "2030/10/30 00:00:00"
           }
         };
@@ -33,8 +37,8 @@ export default defineFakeRoute([
             nickname: "小林",
             roles: ["common"],
             permissions: ["permission:btn:add", "permission:btn:edit"],
-            accessToken: "eyJhbGciOiJIUzUxMiJ9.common",
-            refreshToken: "eyJhbGciOiJIUzUxMiJ9.commonRefresh",
+            accessToken: mockSessionToken("common"),
+            refreshToken: mockSessionToken("common"),
             expires: "2030/10/30 00:00:00"
           }
         };

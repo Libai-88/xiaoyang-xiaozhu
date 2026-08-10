@@ -1,6 +1,5 @@
 import hashlib
-import random
-import string
+import secrets
 import time
 import uuid
 from io import BytesIO
@@ -56,7 +55,8 @@ def _can_use_stardots():
 
 def _build_stardots_headers():
     timestamp = str(int(time.time()))
-    nonce = "".join(random.choices(string.ascii_letters + string.digits, k=10))
+    # nonce 用于接口签名防重放，使用密码学安全随机数
+    nonce = secrets.token_hex(5)
     need_sign_str = f"{timestamp}|{STARDOTS_SECRET}|{nonce}"
     sign = hashlib.md5(need_sign_str.encode("utf-8")).hexdigest().upper()
     return {

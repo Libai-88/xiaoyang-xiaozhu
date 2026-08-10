@@ -5,7 +5,19 @@ import type { PostItem } from "@/app/api/posts";
 
 export const revalidate = 3600;
 
-const BACKEND_URL = process.env.BACKEND_URL || "http://127.0.0.1:8000";
+// 后端地址只允许 http/https，防止环境变量被注入危险协议
+function resolveBackendUrl(): string {
+  const raw = process.env.BACKEND_URL || "http://127.0.0.1:8000";
+  try {
+    const u = new URL(raw);
+    if (u.protocol !== "http:" && u.protocol !== "https:") return "http://127.0.0.1:8000";
+    return u.origin;
+  } catch {
+    return "http://127.0.0.1:8000";
+  }
+}
+
+const BACKEND_URL = resolveBackendUrl();
 
 const FEED_AUTHOR = `1603739641@qq.com (${siteConfig.authorName})`;
 

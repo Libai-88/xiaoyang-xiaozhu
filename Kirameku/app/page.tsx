@@ -1,6 +1,18 @@
 import HomeClient from "./HomeClient";
 
-const API = process.env.BACKEND_URL || "http://127.0.0.1:8000";
+// 后端地址只允许 http/https，防止环境变量被注入 javascript:/file: 等危险协议
+function resolveBackendUrl(): string {
+  const raw = process.env.BACKEND_URL || "http://127.0.0.1:8000";
+  try {
+    const u = new URL(raw);
+    if (u.protocol !== "http:" && u.protocol !== "https:") return "http://127.0.0.1:8000";
+    return u.origin;
+  } catch {
+    return "http://127.0.0.1:8000";
+  }
+}
+
+const API = resolveBackendUrl();
 
 async function fetchProfileData() {
   try {
