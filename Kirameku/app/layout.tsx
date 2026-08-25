@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import { Geist, Geist_Mono, Noto_Serif_SC } from "next/font/google";
 import { MotionConfig } from "framer-motion";
 import "./globals.css";
@@ -58,12 +58,6 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-};
-
-// 移动端浏览器地址栏与系统 UI 主题色，与站点品牌色一致
-export const viewport: Viewport = {
-  themeColor: "#a18cd1",
-  colorScheme: "light dark",
 };
 
 export default function RootLayout({
