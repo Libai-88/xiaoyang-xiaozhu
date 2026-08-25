@@ -3,7 +3,13 @@ from app.config import DATABASE_URL, ADMIN_USERNAME, ADMIN_PASSWORD, ADMIN_NICKN
 from app.models import User
 from app.utils.auth import hash_password, verify_password
 
-engine = create_engine(DATABASE_URL, echo=False, pool_pre_ping=True)
+# pool_pre_ping 防止拿到已断开的连接；pool_recycle 在数据库空闲超时前主动回收连接（Render 托管 PG 会断开空闲连接）
+engine = create_engine(
+    DATABASE_URL,
+    echo=False,
+    pool_pre_ping=True,
+    pool_recycle=1800,
+)
 
 # 为线上已有数据库补建缺失索引（幂等，CREATE INDEX IF NOT EXISTS 不会重复创建）
 _EXTRA_INDEXES = [
