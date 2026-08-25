@@ -3,10 +3,28 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from starlette.requests import Request
 
 from app.config import CORS_ORIGINS
 from app.database import init_db
 from app.api import api_router
+
+# 公共只读接口的短时缓存：仅缓存匿名 GET 的静态内容，
+# 带 Authorization 的请求（管理后台）与用户生成内容（说说/留言/评论）一律不缓存
+_CACHEABLE_PREFIXES = (
+    "/api/posts",
+    "/api/categories",
+    "/api/tags",
+    "/api/albums",
+    "/api/friend-links",
+    "/api/site-config",
+    "/api/projects",
+    "/api/bookmarks",
+)
+
+
+def _is_cacheable_path(path: str) -> bool:
+    return any(path == p or path.startswith(p + "/") for p in _CACHEABLE_PREFIXES)
 
 
 @asynccontextmanager
@@ -24,6 +42,19 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def cache_public_reads(request: Request, call_next):
+    response = await call_next(request)
+    if (
+        request.method in ("GET", "HEAD")
+        and response.status_code < 400
+        and "authorization" not in request.headers
+        and _is_cacheable_path(request.url.path)
+    ):
+        response.headers["Cache-Control"] = "public, max-age=120"
+    return response
 
 # 一行挂载所有 API 路由
 app.include_router(api_router)
