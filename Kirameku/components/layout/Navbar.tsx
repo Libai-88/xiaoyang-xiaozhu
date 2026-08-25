@@ -44,11 +44,17 @@ const navLinks = [
 export default function Navbar() {
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const settingsRef = useRef<HTMLDivElement>(null);
   const [easterEgg, setEasterEgg] = useState(false);
   const clickTimes = useRef<number[]>([]);
+
+  // 服务端与客户端首次渲染保持一致，active 状态在挂载后再计算，避免水合错配
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleLogoClick = useCallback(() => {
     const now = Date.now();
@@ -96,7 +102,7 @@ export default function Navbar() {
             <div className="hidden md:flex flex-1 min-w-0 items-center justify-center overflow-x-auto space-x-1">
               {navLinks.map((link) => {
                 const Icon = link.icon;
-                const isActive = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+                const isActive = mounted && (link.href === "/" ? pathname === "/" : pathname.startsWith(link.href));
                 return (
                   <Link
                     key={link.href}
@@ -187,7 +193,7 @@ export default function Navbar() {
             <div className="p-4 space-y-1">
               {navLinks.map((link) => {
                 const Icon = link.icon;
-                const isActive = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+                const isActive = mounted && (link.href === "/" ? pathname === "/" : pathname.startsWith(link.href));
                 return (
                   <Link
                     key={link.href}
