@@ -288,12 +288,10 @@ body.anim-light #waifu-tips {
   animation: gradient-x 4s ease infinite;
 }
 
-/* 3D 倾斜卡片（配合 TiltCard 组件） */
+/* 3D 倾斜卡片（transform 由 TiltCard 的 framer-motion 弹簧驱动） */
 .tilt-card {
   position: relative;
   transform-style: preserve-3d;
-  transform: perspective(900px) rotateX(0deg) rotateY(0deg);
-  transition: transform 0.2s ease-out;
   will-change: transform;
 }
 
@@ -307,4 +305,33 @@ body.anim-light #waifu-tips {
 
 .tilt-card:hover .tilt-glare {
   opacity: 1;
+}
+
+/* 流星特效（Meteors 组件）：对角滑落的发光细线 */
+@keyframes meteor-fall {
+  0% {
+    transform: translate3d(0, -30vh, 0) rotate(215deg);
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(-55vw, 55vh, 0) rotate(215deg);
+    opacity: 0;
+  }
+}
+
+.meteor {
+  position: absolute;
+  height: 2px;
+  width: 64px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.9), transparent);
+  box-shadow: 0 0 8px 1px rgba(165, 243, 252, 0.5);
+  animation: meteor-fall linear infinite;
+  will-change: transform, opacity;
 }

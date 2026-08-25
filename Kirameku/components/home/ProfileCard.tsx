@@ -1,6 +1,7 @@
 import { siteConfig } from "@/siteConfig";
 import Image from "next/image";
 import Magnetic from "@/components/effects/Magnetic";
+import CountUp from "@/components/effects/CountUp";
 
 export default function ProfileCard({
   postCount = 0,
@@ -98,7 +99,7 @@ function StatItem({
       <div
         className={`text-xl md:text-2xl font-black ${color} transition-transform group-hover/stat:scale-110`}
       >
-        {count}
+        <CountUp value={count} />
       </div>
       <div className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
         {label}

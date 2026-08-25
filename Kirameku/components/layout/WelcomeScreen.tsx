@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { siteConfig } from "@/siteConfig";
 import AnimatedGradientText from "@/components/effects/AnimatedGradientText";
+import Meteors from "@/components/effects/Meteors";
 
 const SESSION_KEY = "welcome-shown";
 
@@ -51,6 +52,9 @@ export default function WelcomeScreen() {
             animate={{ scale: 1, opacity: 0.2 }}
             transition={{ duration: 1.2 }}
           />
+
+          {/* 流星装饰 */}
+          <Meteors count={16} />
 
           {/* 内容 */}
           <div className="relative z-10 text-center px-6">

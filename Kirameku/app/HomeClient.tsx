@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import SearchBar from "@/components/ui/SearchBar";
 import ProfileCard from "@/components/home/ProfileCard";
-import FadeIn from "@/components/ui/FadeIn";
+import Reveal from "@/components/effects/Reveal";
 import TiltCard from "@/components/effects/TiltCard";
 
 const placeholder = (
@@ -34,15 +34,15 @@ export default function HomeClient({
   return (
     <div className="w-full max-w-6xl mx-auto py-6 md:py-12 px-4 sm:px-10 relative z-10">
       {/* 搜索栏 */}
-      <FadeIn>
+      <Reveal y={12}>
         <div className="hidden md:block">
           <SearchBar />
         </div>
-      </FadeIn>
+      </Reveal>
 
       <main className="flex flex-col gap-4 md:gap-6 w-full">
         {/* 第一行：个人信息 + 播放器 */}
-        <FadeIn delay={0.1}>
+        <Reveal delay={0.05}>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 w-full items-stretch">
             <div className="md:col-span-8 flex w-full">
               <TiltCard className="h-full w-full rounded-3xl">
@@ -59,17 +59,17 @@ export default function HomeClient({
               </TiltCard>
             </div>
           </div>
-        </FadeIn>
+        </Reveal>
 
         {/* 歌词栏 */}
-        <FadeIn delay={0.15}>
+        <Reveal delay={0.1}>
           <div className="w-full">
             <LyricBar />
           </div>
-        </FadeIn>
+        </Reveal>
 
         {/* 第二行：照片墙 + 文章 + 说说 + 舔狗日记 */}
-        <FadeIn delay={0.2}>
+        <Reveal delay={0.15}>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 w-full items-stretch">
             <div className="md:col-span-4 h-full">
               <PhotoWallPreview />
@@ -86,14 +86,14 @@ export default function HomeClient({
               </div>
             </div>
           </div>
-        </FadeIn>
+        </Reveal>
 
         {/* 底部数据面板 */}
-        <FadeIn delay={0.25}>
+        <Reveal delay={0.2}>
           <div className="w-full">
             <SiteDashboard />
           </div>
-        </FadeIn>
+        </Reveal>
       </main>
     </div>
   );
