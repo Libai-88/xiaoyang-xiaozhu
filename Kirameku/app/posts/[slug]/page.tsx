@@ -60,7 +60,6 @@ import ReadingProgress from "@/components/ui/ReadingProgress";
 import PostComments from "@/components/posts/PostComments";
 import { postCoverFallback } from "@/components/ui/imageFallback";
 import { sanitizeHtml } from "@/lib/sanitizeHtml";
-import { siteConfig } from "@/siteConfig";
 
 export default function PostDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -104,13 +103,6 @@ export default function PostDetailPage() {
       });
     return () => { active = false; };
   }, [slug]);
-
-  // 加载完成后把标签页标题更新为文章标题（客户端渲染页面无法导出服务端 metadata）
-  useEffect(() => {
-    if (post?.title) {
-      document.title = `${post.title} | ${siteConfig.title}`;
-    }
-  }, [post]);
 
   // 代码高亮
   useEffect(() => {
