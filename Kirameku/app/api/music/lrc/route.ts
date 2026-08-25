@@ -17,7 +17,9 @@ export async function GET(req: NextRequest) {
     return new NextResponse(cached.text, {
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
-        "Cache-Control": "public, max-age=21600, s-maxage=21600",
+        "Cache-Control": cached.text
+          ? "public, max-age=21600, s-maxage=21600"
+          : "no-store",
       },
     });
   }
@@ -39,14 +41,20 @@ export async function GET(req: NextRequest) {
     const lrc = (data?.lrc?.lyric || "") as string;
     cache.set(id, { text: lrc, expires: Date.now() + CACHE_TTL });
 
+    // 空响应（歌词获取失败）不缓存，避免 CDN 缓存空白歌词
     return new NextResponse(lrc, {
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
-        "Cache-Control": "public, max-age=21600, s-maxage=21600",
+        "Cache-Control": lrc
+          ? "public, max-age=21600, s-maxage=21600"
+          : "no-store",
       },
     });
   } catch {
     // 歌词获取失败时返回空文本，前端解析为空数组，不打断播放
-    return new NextResponse("", { status: 200 });
+    return new NextResponse("", {
+      status: 200,
+      headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" },
+    });
   }
 }
