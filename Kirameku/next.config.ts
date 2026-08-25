@@ -49,6 +49,9 @@ const nextConfig: NextConfig = {
 
   images: {
     formats: ["image/avif", "image/webp"],
+    // Next.js 16 要求显式声明允许的 quality，并设置优化图缓存时长
+    qualities: [75],
+    minimumCacheTTL: 31536000,
     remotePatterns: [
       { protocol: "https", hostname: "static.hiromu.top" },
       { protocol: "https", hostname: "hiromu520.oss-cn-beijing.aliyuncs.com" },
