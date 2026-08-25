@@ -13,7 +13,7 @@ class Chatter(SQLModel, table=True):
     likes: int = Field(default=0)
     comments_count: int = Field(default=0)
     status: str = Field(default="draft", max_length=20, index=True)
-    created_at: datetime = Field(default_factory=datetime.now)
+    created_at: datetime = Field(default_factory=datetime.now, index=True)
     updated_at: datetime = Field(default_factory=datetime.now)
 
 
@@ -22,7 +22,7 @@ class ChatterComment(SQLModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
     chatter_id: int = Field(foreign_key="chatter.id", index=True)
-    parent_id: Optional[int] = Field(default=None, foreign_key="chatter_comment.id")
+    parent_id: Optional[int] = Field(default=None, foreign_key="chatter_comment.id", index=True)
     github_user_id: Optional[int] = Field(default=None, foreign_key="github_user.id")
     content: str
     ip: str = Field(default="", max_length=45)

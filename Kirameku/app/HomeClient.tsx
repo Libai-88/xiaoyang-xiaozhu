@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import SearchBar from "@/components/ui/SearchBar";
 import ProfileCard from "@/components/home/ProfileCard";
 import FadeIn from "@/components/ui/FadeIn";
+import TiltCard from "@/components/effects/TiltCard";
 
 const placeholder = (
   <div className="rounded-3xl bg-white/20 dark:bg-slate-800/30 backdrop-blur-md border border-white/30 animate-pulse min-h-[240px] md:min-h-[420px]" />
@@ -44,14 +45,18 @@ export default function HomeClient({
         <FadeIn delay={0.1}>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 w-full items-stretch">
             <div className="md:col-span-8 flex w-full">
-              <ProfileCard
-                postCount={postCount}
-                chatterCount={chatterCount}
-                photoCount={photoCount}
-              />
+              <TiltCard className="h-full w-full rounded-3xl">
+                <ProfileCard
+                  postCount={postCount}
+                  chatterCount={chatterCount}
+                  photoCount={photoCount}
+                />
+              </TiltCard>
             </div>
             <div className="md:col-span-4 flex w-full">
-              <CloudPlayer />
+              <TiltCard className="h-full w-full rounded-3xl">
+                <CloudPlayer />
+              </TiltCard>
             </div>
           </div>
         </FadeIn>

@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/components/providers/ThemeProvider";
 
 import SettingsPanel from "@/components/ui/SettingsPanel";
+import AnimatedGradientText from "@/components/effects/AnimatedGradientText";
 import {
   Home,
   BookOpen,
@@ -86,8 +87,8 @@ export default function Navbar() {
               className={`shrink-0 flex items-center space-x-0.5 select-none ${easterEgg ? "animate-[spin_0.5s_ease-in-out_3]" : ""}`}
               style={easterEgg ? { animation: "spin 0.5s ease-in-out 6, rainbow 3s linear" } : undefined}
             >
-              <span className={`whitespace-nowrap text-xl font-bold tracking-tight ${easterEgg ? "text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500" : "text-slate-800 dark:text-white"}`} style={{ fontFamily: "'Noto Serif SC', serif" }}>
-                小羊与小猪
+              <span className={`whitespace-nowrap text-xl font-bold tracking-tight ${easterEgg ? "text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500" : ""}`} style={{ fontFamily: "'Noto Serif SC', serif" }}>
+                {easterEgg ? "小羊与小猪" : <AnimatedGradientText>小羊与小猪</AnimatedGradientText>}
               </span>
             </Link>
 

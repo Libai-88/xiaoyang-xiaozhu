@@ -32,12 +32,31 @@ const notoSerifSC = Noto_Serif_SC({
 });
 
 export const metadata: Metadata = {
-  title: siteConfig.title,
+  metadataBase: new URL(siteConfig.url || "https://wemust-99.cc.cd"),
+  title: {
+    default: siteConfig.title,
+    template: `%s | ${siteConfig.title}`,
+  },
   description: siteConfig.bio,
   alternates: {
     types: {
       "application/rss+xml": "/feed",
     },
+  },
+  openGraph: {
+    title: siteConfig.title,
+    description: siteConfig.bio,
+    type: "website",
+    locale: "zh_CN",
+  },
+  twitter: {
+    card: "summary",
+    title: siteConfig.title,
+    description: siteConfig.bio,
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 

@@ -10,6 +10,11 @@ interface SongData {
   lrcUrl: string;
 }
 
+// 歌单/歌曲数据内存缓存（serverless 实例级），并配合 Cache-Control 让 Vercel CDN 缓存，
+// 避免每次进入页面都重新向网易云拉取歌单与播放地址（该过程约 3s）
+const CACHE_TTL = 6 * 60 * 60 * 1000; // 6 小时
+const cache = new Map<string, { data: SongData[]; expires: number }>();
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const playlistId = searchParams.get("id");
@@ -20,6 +25,14 @@ export async function GET(req: NextRequest) {
       { error: "需要提供 id (歌单ID) 或 ids (歌曲ID,逗号分隔)" },
       { status: 400 }
     );
+  }
+
+  const cacheKey = playlistId ? `playlist:${playlistId}` : `ids:${songIds}`;
+  const cached = cache.get(cacheKey);
+  if (cached && cached.expires > Date.now()) {
+    return NextResponse.json(cached.data, {
+      headers: { "Cache-Control": "public, max-age=3600, s-maxage=3600" },
+    });
   }
 
   const meting = new Meting("netease");
@@ -48,7 +61,7 @@ export async function GET(req: NextRequest) {
       tracks = results.flat();
     }
 
-    // 批量获取 URL
+    // 并发批量获取 URL（单首失败不影响其他歌曲）
     const songs: SongData[] = await Promise.all(
       tracks.map(async (track) => {
         let src = "";
@@ -72,7 +85,12 @@ export async function GET(req: NextRequest) {
       })
     );
 
-    return NextResponse.json(songs.filter((s) => s.src));
+    const result = songs.filter((s) => s.src);
+    cache.set(cacheKey, { data: result, expires: Date.now() + CACHE_TTL });
+
+    return NextResponse.json(result, {
+      headers: { "Cache-Control": "public, max-age=3600, s-maxage=3600" },
+    });
   } catch (err) {
     console.error("Meting error:", err);
     return NextResponse.json(

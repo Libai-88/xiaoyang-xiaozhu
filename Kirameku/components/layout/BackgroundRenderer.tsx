@@ -2,6 +2,7 @@
 
 import { useBackground } from "@/components/providers/BackgroundProvider";
 import { siteConfig } from "@/siteConfig";
+import Aurora from "@/components/effects/Aurora";
 
 export default function BackgroundRenderer() {
   const { bgImage, bgBlur } = useBackground();
@@ -36,6 +37,8 @@ export default function BackgroundRenderer() {
           )}
         </>
       )}
+      {/* 极光动效叠加层 */}
+      <Aurora />
     </div>
   );
 }

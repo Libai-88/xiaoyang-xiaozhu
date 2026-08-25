@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { siteConfig } from "@/siteConfig";
+import AnimatedGradientText from "@/components/effects/AnimatedGradientText";
 
 const SESSION_KEY = "welcome-shown";
 
@@ -72,12 +73,12 @@ export default function WelcomeScreen() {
               exit={{ opacity: 0, scale: 1.1 }}
               transition={{ delay: 0.8, duration: 0.7, ease: "easeOut" }}
             >
-              <span
-                className="text-4xl md:text-5xl font-bold text-white tracking-tight"
-                style={{ fontFamily: "'Noto Serif SC', serif" }}
+              <AnimatedGradientText
+                className="text-4xl md:text-5xl font-bold tracking-tight"
+                colors="linear-gradient(90deg, #f8fafc, #c7d2fe, #fbcfe8, #a5f3fc, #f8fafc)"
               >
                 {siteConfig.title}
-              </span>
+              </AnimatedGradientText>
             </motion.div>
 
             {/* 时间问候 */}

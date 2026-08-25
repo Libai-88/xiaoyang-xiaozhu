@@ -9,6 +9,14 @@ import rehypeStringify from "rehype-stringify";
 import "highlight.js/styles/atom-one-dark.css";
 import { siteConfig } from "@/siteConfig";
 import FadeIn from "@/components/ui/FadeIn";
+import { sanitizeHtml } from "@/lib/sanitizeHtml";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "关于我们",
+  description: siteConfig.bio,
+  alternates: { canonical: "/about" },
+};
 
 export default async function AboutPage() {
   const fullPath = path.join(process.cwd(), "app", "about", "about.md");
@@ -28,7 +36,7 @@ export default async function AboutPage() {
       .use(rehypeStringify, { allowDangerousHtml: true })
       .process(content);
 
-    contentHtml = processedContent.toString();
+    contentHtml = sanitizeHtml(processedContent.toString());
   } catch (e) {
     console.error("读取 about.md 失败", e);
   }

@@ -52,20 +52,51 @@ def _update_category_count(session: Session, category_id: int | None):
         session.add(cat)
 
 
-def _post_to_dict(post: Post, session: Session) -> dict:
-    """将 Post 对象转为带 category 和 tags 的字典。"""
-    cat_name = ""
-    if post.category_id:
-        cat = session.get(Category, post.category_id)
-        if cat:
-            cat_name = cat.name
-
-    tag_names = []
-    pts = session.exec(select(PostTag).where(PostTag.post_id == post.id)).all()
+def _attach_relations(session: Session, posts: list[Post]) -> dict[int, tuple[str, list[str]]]:
+    """批量加载文章的分类名与标签名，避免逐篇 N+1 查询。"""
+    if not posts:
+        return {}
+    post_ids = [p.id for p in posts]
+    cat_ids = {p.category_id for p in posts if p.category_id}
+    cat_names = {}
+    if cat_ids:
+        for cat in session.exec(select(Category).where(Category.id.in_(cat_ids))).all():
+            cat_names[cat.id] = cat.name
+    pts = session.exec(select(PostTag).where(PostTag.post_id.in_(post_ids))).all()
+    tag_ids = {pt.tag_id for pt in pts}
+    tag_names = {}
+    if tag_ids:
+        for tag in session.exec(select(Tag).where(Tag.id.in_(tag_ids))).all():
+            tag_names[tag.id] = tag.name
+    pt_map: dict[int, list[str]] = {}
     for pt in pts:
-        tag = session.get(Tag, pt.tag_id)
-        if tag:
-            tag_names.append(tag.name)
+        pt_map.setdefault(pt.post_id, []).append(tag_names.get(pt.tag_id, ""))
+    return {
+        p.id: (cat_names.get(p.category_id, "") if p.category_id else "", pt_map.get(p.id, []))
+        for p in posts
+    }
+
+
+def _post_to_dict(
+    post: Post,
+    session: Session,
+    cat_name: str | None = None,
+    tag_names: list[str] | None = None,
+) -> dict:
+    """将 Post 对象转为带 category 和 tags 的字典。可传入预加载的关系数据。"""
+    if cat_name is None:
+        cat_name = ""
+        if post.category_id:
+            cat = session.get(Category, post.category_id)
+            if cat:
+                cat_name = cat.name
+
+    if tag_names is None:
+        tag_names = []
+        for pt in session.exec(select(PostTag).where(PostTag.post_id == post.id)).all():
+            tag = session.get(Tag, pt.tag_id)
+            if tag:
+                tag_names.append(tag.name)
 
     return {
         "id": post.id,
@@ -117,7 +148,11 @@ def get_posts(
     q = q.order_by(Post.is_pinned.desc(), Post.created_at.desc())
     q = q.offset((page - 1) * size).limit(size)
     posts = list(session.exec(q).all())
-    return [_post_to_dict(p, session) for p in posts]
+    relations = _attach_relations(session, posts)
+    return [
+        _post_to_dict(p, session, relations[p.id][0], relations[p.id][1])
+        for p in posts
+    ]
 
 
 def get_post_by_slug(session: Session, slug: str) -> dict:

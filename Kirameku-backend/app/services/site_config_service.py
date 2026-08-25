@@ -1,4 +1,5 @@
 import json
+import time
 from datetime import datetime
 from sqlmodel import Session, select
 from fastapi import HTTPException
@@ -6,9 +7,25 @@ from fastapi import HTTPException
 from app.models import SiteConfig
 from app.schemas import SiteConfigUpdate
 
+# 站点配置内存缓存（公开接口每次页面加载都会读取，TTL 60s 内命中缓存）
+_CONFIG_CACHE_TTL = 60
+_config_cache: dict[str, any] | None = None
+_config_cache_ts = 0.0
+
+
+def _invalidate_config_cache():
+    global _config_cache, _config_cache_ts
+    _config_cache = None
+    _config_cache_ts = 0.0
+
 
 def get_all_config(session: Session) -> dict[str, any]:
-    """返回所有配置的 key-value 字典。"""
+    """返回所有配置的 key-value 字典（带短时缓存）。"""
+    global _config_cache, _config_cache_ts
+    now = time.time()
+    if _config_cache is not None and now - _config_cache_ts < _CONFIG_CACHE_TTL:
+        return _config_cache
+
     rows = list(session.exec(select(SiteConfig)).all())
     result = {}
     for r in rows:
@@ -16,6 +33,8 @@ def get_all_config(session: Session) -> dict[str, any]:
             result[r.key] = json.loads(r.value)
         except (json.JSONDecodeError, TypeError):
             result[r.key] = r.value
+    _config_cache = result
+    _config_cache_ts = now
     return result
 
 
@@ -43,6 +62,7 @@ def create_config(session: Session, key: str, value: str, description: str = "")
     session.add(row)
     session.commit()
     session.refresh(row)
+    _invalidate_config_cache()
     return row
 
 
@@ -53,6 +73,7 @@ def delete_config(session: Session, key: str):
         raise HTTPException(404, f"配置 {key} 不存在")
     session.delete(row)
     session.commit()
+    _invalidate_config_cache()
 
 
 def get_config(session: Session, key: str) -> any:
@@ -77,6 +98,7 @@ def update_config(session: Session, key: str, data: SiteConfigUpdate) -> SiteCon
     session.add(row)
     session.commit()
     session.refresh(row)
+    _invalidate_config_cache()
     return row
 
 
@@ -91,4 +113,5 @@ def batch_update_config(session: Session, configs: dict[str, str]) -> dict:
         row.updated_at = datetime.now()
         session.add(row)
     session.commit()
+    _invalidate_config_cache()
     return get_all_config(session)

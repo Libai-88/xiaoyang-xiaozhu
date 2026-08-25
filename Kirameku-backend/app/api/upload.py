@@ -26,10 +26,14 @@ from app.config import (
 
 router = APIRouter(prefix="/api/upload", tags=["上传"])
 
-ALLOWED_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml"}
+ALLOWED_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif"}
 MAX_SIZE = 10 * 1024 * 1024  # 10MB
 UPLOADS_DIR = Path(__file__).resolve().parent.parent.parent / "uploads"
 UPLOADS_DIR.mkdir(exist_ok=True)
+
+# 按 Pillow 识别出的真实格式决定扩展名（不信任用户提交的文件名/Content-Type）
+_EXT_BY_FORMAT = {"jpeg": ".jpg", "jpg": ".jpg", "png": ".png", "webp": ".webp", "gif": ".gif"}
+_CTYPE_BY_FORMAT = {"jpeg": "image/jpeg", "jpg": "image/jpeg", "png": "image/png", "webp": "image/webp", "gif": "image/gif"}
 
 
 def _get_bucket():
@@ -104,7 +108,20 @@ async def upload_image(
     if len(content) > MAX_SIZE:
         raise HTTPException(400, "文件大小不能超过 10MB")
 
-    # 检测方向
+    # 用 Pillow 校验真实图片内容（不信任客户端声明的 Content-Type / 文件名）
+    try:
+        probe = Image.open(BytesIO(content))
+        img_format = (probe.format or "").lower()
+        probe.verify()
+    except Exception:
+        raise HTTPException(400, "文件不是有效的图片")
+
+    ext = _EXT_BY_FORMAT.get(img_format)
+    if not ext:
+        raise HTTPException(400, f"不支持的图片格式: {img_format}")
+    real_content_type = _CTYPE_BY_FORMAT[img_format]
+
+    # 图片真实方向
     orientation = "landscape"
     try:
         img = Image.open(BytesIO(content))
@@ -113,13 +130,12 @@ async def upload_image(
     except Exception:
         pass
 
-    # 生成文件名
-    ext = file.filename.split(".")[-1] if file.filename and "." in file.filename else "webp"
-    filename = f"{uuid.uuid4().hex}.{ext}"
+    # 文件名由 uuid + 真实格式扩展名组成，避免 HTML/SVG 等危险后缀
+    filename = f"{uuid.uuid4().hex}{ext}"
 
     if _can_use_stardots():
         try:
-            url = await _upload_to_stardots(filename, content, file.content_type)
+            url = await _upload_to_stardots(filename, content, real_content_type)
         except httpx.HTTPStatusError as exc:
             detail = exc.response.text if exc.response is not None else "StarDots 上传失败"
             raise HTTPException(500, f"StarDots 上传失败: {detail}") from exc

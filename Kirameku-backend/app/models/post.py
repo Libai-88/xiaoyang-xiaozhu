@@ -29,7 +29,7 @@ class PostTag(SQLModel, table=True):
     __tablename__ = "post_tag"
 
     post_id: int = Field(foreign_key="post.id", primary_key=True)
-    tag_id: int = Field(foreign_key="tag.id", primary_key=True)
+    tag_id: int = Field(foreign_key="tag.id", primary_key=True, index=True)
 
 
 class Post(SQLModel, table=True):
@@ -41,7 +41,7 @@ class Post(SQLModel, table=True):
     description: str = Field(default="", max_length=500)
     content: str = Field(default="")
     cover: str = Field(default="", max_length=500)
-    category_id: Optional[int] = Field(default=None, foreign_key="category.id")
+    category_id: Optional[int] = Field(default=None, foreign_key="category.id", index=True)
     status: str = Field(default="draft", max_length=20, index=True)
     is_pinned: bool = Field(default=False)
     views: int = Field(default=0)
@@ -49,5 +49,5 @@ class Post(SQLModel, table=True):
     word_count: int = Field(default=0)
     reading_time: int = Field(default=0)
     published_at: Optional[datetime] = Field(default=None)
-    created_at: datetime = Field(default_factory=datetime.now)
+    created_at: datetime = Field(default_factory=datetime.now, index=True)
     updated_at: datetime = Field(default_factory=datetime.now)

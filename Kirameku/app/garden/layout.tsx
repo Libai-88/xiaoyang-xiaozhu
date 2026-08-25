@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, redirect } from "next/navigation";
 import {
@@ -37,10 +37,19 @@ export default function GardenLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const [unlocked] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return localStorage.getItem("garden-unlock") === "true";
-  });
+  // mounted 前不读 localStorage，避免 SSR 与客户端水合不一致
+  const [mounted, setMounted] = useState(false);
+  const [unlocked, setUnlocked] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    setUnlocked(localStorage.getItem("garden-unlock") === "true");
+  }, []);
+
+  if (!mounted) {
+    // 水合前渲染空占位，避免服务端提前重定向导致解锁状态丢失
+    return <div className="min-h-screen" />;
+  }
 
   if (!unlocked) {
     redirect("/");

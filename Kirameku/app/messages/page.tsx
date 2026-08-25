@@ -76,26 +76,12 @@ function MessagesContent() {
 
   const [messages, setMessages] = useState<MessageItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<GitHubUser | null>(() => {
-    if (typeof window === "undefined") return null;
-    const saved = localStorage.getItem("github_user");
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch {
-        return null;
-      }
-    }
-    return null;
-  });
+  // 初始为空，水合后再从 localStorage 恢复，避免 SSR 与客户端渲染不一致
+  const [user, setUser] = useState<GitHubUser | null>(null);
   const [inputValue, setInputValue] = useState("");
   const [replyTo, setReplyTo] = useState<MessageItem | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [likedIds, setLikedIds] = useState<Set<number>>(() => {
-    if (typeof window === "undefined") return new Set();
-    const saved = localStorage.getItem("liked_messages");
-    return saved ? new Set(JSON.parse(saved)) : new Set();
-  });
+  const [likedIds, setLikedIds] = useState<Set<number>>(new Set());
   const [expandedReplies, setExpandedReplies] = useState<Set<number>>(
     new Set()
   );
@@ -140,6 +126,8 @@ function MessagesContent() {
         ]);
         if (!active) return;
         setMessages(data);
+      } catch {
+        // 加载失败显示空态
       } finally {
         if (active) setLoading(false);
       }
@@ -148,6 +136,18 @@ function MessagesContent() {
     return () => {
       active = false;
     };
+  }, []);
+
+  // 水合后从 localStorage 恢复点赞状态
+  useEffect(() => {
+    const saved = localStorage.getItem("liked_messages");
+    if (saved) {
+      try {
+        setLikedIds(new Set(JSON.parse(saved)));
+      } catch {
+        // ignore
+      }
+    }
   }, []);
 
   function handleLogin() {

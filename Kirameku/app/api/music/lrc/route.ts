@@ -1,25 +1,48 @@
 import { NextRequest, NextResponse } from "next/server";
-import Meting from "@meting/core";
 
-export const dynamic = "force-dynamic";
+// 歌词代理：服务端直连网易云获取 LRC 文本（@meting/core 在 serverless 下请求会失败）
+// 加内存缓存 + Cache-Control，避免重复请求拖慢播放器
 
-// 歌词代理：服务端从网易云获取 LRC 文本，客户端不再直连第三方歌词 API
+const CACHE_TTL = 6 * 60 * 60 * 1000; // 6 小时
+const cache = new Map<string, { text: string; expires: number }>();
+
 export async function GET(req: NextRequest) {
   const id = req.nextUrl.searchParams.get("id");
   if (!id || !/^\d+$/.test(id)) {
     return new NextResponse("missing id", { status: 400 });
   }
 
-  const meting = new Meting("netease");
-  meting.format(false);
+  const cached = cache.get(id);
+  if (cached && cached.expires > Date.now()) {
+    return new NextResponse(cached.text, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "public, max-age=21600, s-maxage=21600",
+      },
+    });
+  }
+
   try {
-    const raw = await meting.lyric(id);
-    const data = JSON.parse(raw as string);
-    const lrc = (data.lyric || "") as string;
+    const res = await fetch(
+      `https://music.163.com/api/song/lyric?id=${id}&lv=1&kv=1&tv=-1`,
+      {
+        headers: {
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+          Referer: "https://music.163.com/",
+          Cookie: "os=pc; appver=8.0.0",
+        },
+        next: { revalidate: 21600 },
+      }
+    );
+    const data = await res.json();
+    const lrc = (data?.lrc?.lyric || "") as string;
+    cache.set(id, { text: lrc, expires: Date.now() + CACHE_TTL });
+
     return new NextResponse(lrc, {
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
-        "Cache-Control": "public, max-age=86400",
+        "Cache-Control": "public, max-age=21600, s-maxage=21600",
       },
     });
   } catch {

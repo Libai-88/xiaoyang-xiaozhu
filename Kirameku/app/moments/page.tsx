@@ -95,36 +95,41 @@ function MomentsContent() {
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const searchParams = useSearchParams();
-  const [onlyViewId, setOnlyViewId] = useState<string | null>(() => searchParams.get("onlyView"));
-  const [likedIds, setLikedIds] = useState<Set<string>>(() => {
-    if (typeof window === "undefined") return new Set();
-    const saved = localStorage.getItem("liked_chatters");
-    return saved ? new Set(JSON.parse(saved)) : new Set();
-  });
+  // 初始为空，水合后再从 URL/localStorage 恢复，避免 SSR 与客户端渲染不一致
+  const [onlyViewId, setOnlyViewId] = useState<string | null>(null);
+  const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
   const [lightbox, setLightbox] = useState<{
     photos: Photo[];
     index: number;
   } | null>(null);
 
   // 评论相关
-  const [user, setUser] = useState<GitHubUser | null>(() => {
-    if (typeof window === "undefined") return null;
-    const saved = localStorage.getItem("github_user");
-    if (saved) { try { return JSON.parse(saved); } catch { return null; } }
-    return null;
-  });
+  const [user, setUser] = useState<GitHubUser | null>(null);
   const [commentInput, setCommentInput] = useState("");
   const [replyTo, setReplyTo] = useState<ChatterCommentItem | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [commentsMap, setCommentsMap] = useState<Record<string, ChatterCommentItem[]>>({});
   const [commentsLoading, setCommentsLoading] = useState<Record<string, boolean>>({});
   const [expandedReplies, setExpandedReplies] = useState<Set<number>>(new Set());
-  const [likedCommentIds, setLikedCommentIds] = useState<Set<number>>(() => {
-    if (typeof window === "undefined") return new Set();
-    const saved = localStorage.getItem("liked_chatter_comments");
-    return saved ? new Set(JSON.parse(saved)) : new Set();
-  });
+  const [likedCommentIds, setLikedCommentIds] = useState<Set<number>>(new Set());
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // 水合后从 URL 恢复"只看这条"
+  useEffect(() => {
+    setOnlyViewId(searchParams.get("onlyView"));
+  }, [searchParams]);
+
+  // 水合后从 localStorage 恢复点赞状态
+  useEffect(() => {
+    const savedChatters = localStorage.getItem("liked_chatters");
+    if (savedChatters) {
+      try { setLikedIds(new Set(JSON.parse(savedChatters))); } catch { /* ignore */ }
+    }
+    const savedComments = localStorage.getItem("liked_chatter_comments");
+    if (savedComments) {
+      try { setLikedCommentIds(new Set(JSON.parse(savedComments))); } catch { /* ignore */ }
+    }
+  }, []);
 
   // 恢复 GitHub 登录状态
   useEffect(() => {
@@ -163,6 +168,8 @@ function MomentsContent() {
           comments_count: item.comments_count,
           created_at: item.created_at,
         })));
+      } catch {
+        // 加载失败显示空态
       } finally { if (active) setLoading(false); }
     }
     load();

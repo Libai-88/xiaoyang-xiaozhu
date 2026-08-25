@@ -59,23 +59,29 @@ import { getPostBySlug, likePost, type PostDetail } from "@/app/api";
 import ReadingProgress from "@/components/ui/ReadingProgress";
 import PostComments from "@/components/posts/PostComments";
 import { postCoverFallback } from "@/components/ui/imageFallback";
+import { sanitizeHtml } from "@/lib/sanitizeHtml";
 
 export default function PostDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const [post, setPost] = useState<PostDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [likedPosts, setLikedPosts] = useState<Set<number>>(() => {
-    if (typeof window === "undefined") return new Set();
-    const saved = localStorage.getItem("liked_posts");
-    return saved ? new Set(JSON.parse(saved)) : new Set();
-  });
+  // 初始为空，水合后再从 localStorage 恢复，避免 SSR 与客户端渲染不一致
+  const [likedPosts, setLikedPosts] = useState<Set<number>>(new Set());
   const contentRef = useRef<HTMLDivElement>(null);
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
 
+  // 水合后从 localStorage 恢复点赞状态
+  useEffect(() => {
+    const saved = localStorage.getItem("liked_posts");
+    if (saved) {
+      try { setLikedPosts(new Set(JSON.parse(saved))); } catch { /* ignore */ }
+    }
+  }, []);
+
   // 文章 Markdown 只解析一次：点赞/评论/灯箱等交互触发重渲染时不再反复解析全文
   const contentHtml = useMemo(
-    () => (post ? (marked.parse(post.content) as string) : ""),
+    () => (post ? sanitizeHtml(marked.parse(post.content) as string) : ""),
     [post]
   );
 

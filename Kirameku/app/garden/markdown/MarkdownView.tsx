@@ -8,6 +8,7 @@ import { markdown } from "@codemirror/lang-markdown";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { keymap } from "@codemirror/view";
 import { marked } from "marked";
+import { sanitizeHtml } from "@/lib/sanitizeHtml";
 
 const fadeIn = {
   hidden: { opacity: 0, scale: 0.85 },
@@ -79,9 +80,9 @@ export default function MarkdownView() {
   const updatePreview = useCallback((doc: string) => {
     const rendered = marked(doc, { breaks: true, gfm: true });
     if (typeof rendered === "string") {
-      setHtml(rendered);
+      setHtml(sanitizeHtml(rendered));
     } else {
-      rendered.then(setHtml);
+      rendered.then((r) => setHtml(sanitizeHtml(r)));
     }
     // word & char count
     const text = doc.replace(/[#*`~\[\]()>|\-_{}!]/g, "").trim();

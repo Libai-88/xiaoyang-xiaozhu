@@ -5,9 +5,31 @@ from app.utils.auth import hash_password, verify_password
 
 engine = create_engine(DATABASE_URL, echo=False, pool_pre_ping=True)
 
+# 为线上已有数据库补建缺失索引（幂等，CREATE INDEX IF NOT EXISTS 不会重复创建）
+_EXTRA_INDEXES = [
+    "CREATE INDEX IF NOT EXISTS idx_post_category ON post (category_id)",
+    "CREATE INDEX IF NOT EXISTS idx_post_created ON post (created_at)",
+    "CREATE INDEX IF NOT EXISTS idx_posttag_tag ON post_tag (tag_id)",
+    "CREATE INDEX IF NOT EXISTS idx_comment_parent ON comment (parent_id)",
+    "CREATE INDEX IF NOT EXISTS idx_chatter_created ON chatter (created_at)",
+    "CREATE INDEX IF NOT EXISTS idx_chatter_comment_parent ON chatter_comment (parent_id)",
+    "CREATE INDEX IF NOT EXISTS idx_visitor_created ON visitor (created_at)",
+]
+
+
+def _create_extra_indexes():
+    try:
+        with engine.begin() as conn:
+            for stmt in _EXTRA_INDEXES:
+                conn.exec_driver_sql(stmt)
+    except Exception:
+        # 建索引失败不阻塞启动（如权限不足或索引已存在）
+        pass
+
 
 def init_db():
     SQLModel.metadata.create_all(engine)
+    _create_extra_indexes()
     if ADMIN_USERNAME and ADMIN_PASSWORD:
         with Session(engine) as session:
             user = session.exec(

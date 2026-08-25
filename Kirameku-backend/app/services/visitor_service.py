@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 from typing import Optional
-from sqlmodel import Session, select, col
+from sqlmodel import Session, select, col, func
 from app.models.visitor import Visitor
 
 # 内存缓存 IP 地理位置，避免重复请求
@@ -310,7 +310,7 @@ def get_recent_visitors(
 
 def get_visitor_count(session: Session) -> int:
     """获取总访客数"""
-    return len(list(session.exec(select(Visitor)).all()))
+    return session.exec(select(func.count(Visitor.id))).one()
 
 
 def delete_visitor(session: Session, visitor_id: int):

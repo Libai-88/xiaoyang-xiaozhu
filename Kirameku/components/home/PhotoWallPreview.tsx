@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import NextImage from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { getAllPhotos } from "@/app/api";
 
@@ -134,11 +135,12 @@ export default function PhotoWallPreview() {
           transition={{ duration: 1.2 }}
           className="absolute inset-0"
         >
-          <img
+          <NextImage
             src={photos[currentIndex].url}
-            draggable={false}
-            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 pointer-events-none"
             alt=""
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className="object-cover transition-transform duration-1000 group-hover:scale-105 pointer-events-none"
           />
         </motion.div>
       </AnimatePresence>

@@ -1,4 +1,4 @@
-from sqlmodel import Session, select
+from sqlmodel import Session, select, func
 from fastapi import HTTPException
 
 from app.models import Message, GitHubUser
@@ -27,11 +27,11 @@ def get_messages(
 
 
 def get_message_count(session: Session, status: str | None = "approved") -> int:
-    q = select(Message)
+    q = select(func.count(Message.id))
     if status:
         q = q.where(Message.status == status)
     q = q.where(Message.parent_id.is_(None))
-    return len(list(session.exec(q).all()))
+    return session.exec(q).one()
 
 
 def create_message(

@@ -30,4 +30,8 @@ def decode_token(token: str) -> dict:
 
 
 def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict:
-    return decode_token(credentials.credentials)
+    payload = decode_token(credentials.credentials)
+    # 仅允许管理后台签发的令牌（含 admin 声明）；拒绝 GitHub 用户令牌访问管理接口
+    if payload.get("type") == "github" or "admin" not in payload:
+        raise HTTPException(status_code=403, detail="没有权限访问管理接口")
+    return payload

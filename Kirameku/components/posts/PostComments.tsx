@@ -58,24 +58,22 @@ export default function PostComments({ postId }: { postId: number }) {
   const [comments, setComments] = useState<CommentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
-  const [user, setUser] = useState<GitHubUser | null>(() => {
-    if (typeof window === "undefined") return null;
-    const saved = localStorage.getItem("github_user");
-    if (saved) {
-      try { return JSON.parse(saved); } catch { return null; }
-    }
-    return null;
-  });
+  // 初始为空，水合后再从 localStorage 恢复，避免 SSR 与客户端渲染不一致
+  const [user, setUser] = useState<GitHubUser | null>(null);
   const [inputValue, setInputValue] = useState("");
   const [replyTo, setReplyTo] = useState<CommentItem | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [expandedReplies, setExpandedReplies] = useState<Set<number>>(new Set());
-  const [likedIds, setLikedIds] = useState<Set<number>>(() => {
-    if (typeof window === "undefined") return new Set();
-    const saved = localStorage.getItem("liked_comments");
-    return saved ? new Set(JSON.parse(saved)) : new Set();
-  });
+  const [likedIds, setLikedIds] = useState<Set<number>>(new Set());
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // 水合后从 localStorage 恢复点赞状态
+  useEffect(() => {
+    const saved = localStorage.getItem("liked_comments");
+    if (saved) {
+      try { setLikedIds(new Set(JSON.parse(saved))); } catch { /* ignore */ }
+    }
+  }, []);
 
   useEffect(() => {
     const savedToken = localStorage.getItem("github_token");
