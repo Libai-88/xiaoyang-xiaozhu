@@ -5,6 +5,7 @@ const backendUrl = process.env.BACKEND_URL || "http://127.0.0.1:8000";
 const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
+  reactCompiler: true,
 
   async rewrites() {
     return [
