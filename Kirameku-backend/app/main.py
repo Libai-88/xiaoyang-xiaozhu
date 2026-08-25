@@ -56,6 +56,15 @@ async def cache_public_reads(request: Request, call_next):
         response.headers["Cache-Control"] = "public, max-age=120"
     return response
 
+
+@app.middleware("http")
+async def security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers.setdefault("X-Content-Type-Options", "nosniff")
+    response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
+    response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+    return response
+
 # 一行挂载所有 API 路由
 app.include_router(api_router)
 
