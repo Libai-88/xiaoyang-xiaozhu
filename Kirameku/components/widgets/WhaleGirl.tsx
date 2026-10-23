@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState, type CSSProperties } from "re
 import { LOVE_QUOTES } from "@/data/love";
 
 /**
- * 鲸鱼娘看板娘 v3（情侣互动版）
+ * 鲸鱼娘看板娘 v3.1（情侣互动版，强制重建）
  * 多帧表情动画：静止/眨眼/挥手 三帧轮换 + 呼吸浮动 + 鼠标跟随倾斜 + 点击互动。
  * 新增：跟小羊小猪联动——点击/定时弹台词时，大概率冒出「情侣视角」甜话
  * （含替小羊转告小猪的情话），并飘出小心心。
