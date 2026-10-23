@@ -122,7 +122,7 @@ export default function WhaleGirl() {
       </div>
       {tip && <div className="whale-tip">{tip}</div>}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="https://aka.doubaocdn.com/s/YBWWIwSLRn" alt="鲸鱼娘" draggable={false} />
+      <img src="https://aka.doubaocdn.com/s/fTho2zYBMM" alt="鲸鱼娘" draggable={false} />
     </div>
   );
 }
