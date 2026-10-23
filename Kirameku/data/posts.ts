@@ -63,4 +63,22 @@ export const postsData: Post[] = [
     tags: ["旅行", "骑行", "杭州"],
     cover: "https://picsum.photos/seed/spring/800/400",
   },
+  {
+    slug: "nextjs16-app-router-practice",
+    title: "Next.js 16 实战：动态路由踩坑记",
+    description: "从一次线上 500 说起：jsdom ESM 冲突、动态路由与错误边界的纠缠，以及最终的排查思路。",
+    date: "2026-08-10",
+    category: "技术",
+    tags: ["Next.js", "部署", "踩坑"],
+    cover: "https://picsum.photos/seed/next16/800/400",
+  },
+  {
+    slug: "arch-linux-niri-setup",
+    title: "Arch + niri 桌面折腾全记录",
+    description: "从分区到装好 Wayland 桌面，再到 fcitx5 输入法和微信 AppImage 的兼容性调试，一篇文章讲完。",
+    date: "2026-09-15",
+    category: "技术",
+    tags: ["Arch", "niri", "Linux"],
+    cover: "https://picsum.photos/seed/niri/800/400",
+  },
 ];

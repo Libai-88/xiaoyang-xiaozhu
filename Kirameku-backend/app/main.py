@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
 from starlette.requests import Request
 
@@ -42,6 +43,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 对所有文本类响应启用 GZip 压缩，减少国内访问的传输体积
+app.add_middleware(GZipMiddleware, minimum_size=500)
 
 
 @app.middleware("http")
