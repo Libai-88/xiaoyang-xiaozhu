@@ -1,0 +1,4 @@
+# pnpm 构建脚本白名单：允许 unrs-resolver 运行 napi-postinstall
+# （否则 pnpm build 前的依赖状态检查会因被忽略的构建脚本失败）
+allowBuilds:
+  unrs-resolver: true
