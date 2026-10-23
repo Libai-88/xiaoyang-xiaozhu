@@ -4,14 +4,12 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, redirect } from "next/navigation";
 import {
-  ArrowLeft, LayoutDashboard, MapPin, Orbit, CloudRain, User,
-  Sparkles, Droplets, Flower2, Mountain, Code2, Grid3x3,
-  Sigma, BarChart3, FileText, Braces, Palette, QrCode, Star, Box,
-} from "lucide-react";
+  ArrowLeft, LayoutDashboard, Orbit, CloudRain, User,
+  Sparkles, Droplets, Flower2, Mountain, Grid3x3,
+  BarChart3, Palette, QrCode, Star } from "lucide-react";
 
 const navItems = [
   { href: "/garden", label: "仪表盘", icon: LayoutDashboard },
-  { href: "/garden/map", label: "地图", icon: MapPin },
   { href: "/garden/solar", label: "太阳系", icon: Orbit },
   { href: "/garden/rain", label: "代码雨", icon: CloudRain },
   { href: "/garden/visitor", label: "访客信息", icon: User },
@@ -19,14 +17,9 @@ const navItems = [
   { href: "/garden/fluid", label: "流体", icon: Droplets },
   { href: "/garden/kaleidoscope", label: "万花筒", icon: Flower2 },
   { href: "/garden/sand", label: "重力沙子", icon: Mountain },
-  { href: "/garden/python", label: "Python", icon: Code2 },
   { href: "/garden/life", label: "生命游戏", icon: Grid3x3 },
-  { href: "/garden/math", label: "数学可视化", icon: Sigma },
   { href: "/garden/sorting", label: "排序算法", icon: BarChart3 },
-  { href: "/garden/markdown", label: "Markdown", icon: FileText },
-  { href: "/garden/json", label: "JSON", icon: Braces },
   { href: "/garden/color", label: "颜色工具", icon: Palette },
-  { href: "/garden/studio", label: "3D工作室", icon: Box },
   { href: "/garden/qrcode", label: "二维码", icon: QrCode },
   { href: "/garden/stars", label: "星空", icon: Star },
 ];
