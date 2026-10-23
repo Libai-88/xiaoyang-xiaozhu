@@ -585,3 +585,49 @@ body.anim-light .whale-tip {
     animation: none !important;
   }
 }
+
+/* 鲸鱼娘恋爱气泡：淡粉描边 */
+.whale-tip-love {
+  border-color: rgba(244, 114, 182, 0.45) !important;
+  background: linear-gradient(145deg, rgba(255, 241, 246, 0.95), rgba(255, 228, 238, 0.95)) !important;
+  box-shadow: 0 8px 24px rgba(244, 114, 182, 0.22) !important;
+}
+
+.whale-tip-love::after {
+  border-right-color: rgba(244, 114, 182, 0.45) !important;
+  border-bottom-color: rgba(244, 114, 182, 0.45) !important;
+}
+
+/* 恋爱气泡旁飘起的小心心 */
+@keyframes whale-heart-rise {
+  0%   { opacity: 0; transform: translate(-50%, 6px) scale(0.6); }
+  20%  { opacity: 1; transform: translate(-50%, -4px) scale(1.15); }
+  70%  { opacity: 1; transform: translate(-50%, -14px) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -28px) scale(0.9); }
+}
+
+.whale-heart {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  font-size: 15px;
+  pointer-events: none;
+  animation: whale-heart-rise 1.9s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+.whale-heart-1 {
+  left: 38%;
+  font-size: 14px;
+  animation-delay: 0.1s;
+}
+
+.whale-heart-2 {
+  left: 62%;
+  font-size: 12px;
+  animation-delay: 0.35s;
+}
+
+body.whale-reduced .whale-heart {
+  animation: none;
+}

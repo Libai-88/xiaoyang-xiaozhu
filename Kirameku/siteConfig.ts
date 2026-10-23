@@ -67,9 +67,8 @@ export const siteConfig = {
   chatterDescription: "生活、技术、随想的碎片记录",
 
   // 情侣空间配置
-  // anniversary：恋爱纪念日（ISO 格式，如 "2025-05-20T00:00:00"），
-  // 填写后首页「心动计数器」显示「在一起第 N 天」实时秒表；留空则显示「永远在一起」
+  // anniversary：恋爱纪念日（ISO 格式），填写后首页「心动计数器」显示「在一起第 N 天」实时秒表
   couple: {
-    anniversary: "",
+    anniversary: "2025-12-14T00:00:00",
   },
 };

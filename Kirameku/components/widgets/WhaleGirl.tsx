@@ -1,11 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
+import { LOVE_QUOTES } from "@/data/love";
 
 /**
- * 鲸鱼娘看板娘 v2
+ * 鲸鱼娘看板娘 v3（情侣互动版）
  * 多帧表情动画：静止/眨眼/挥手 三帧轮换 + 呼吸浮动 + 鼠标跟随倾斜 + 点击互动。
- * 功能：右下角浮动展示、随机眨眼、点击弹台词并挥手、可拖拽、可隐藏；
+ * 新增：跟小羊小猪联动——点击/定时弹台词时，大概率冒出「情侣视角」甜话
+ * （含替小羊转告小猪的情话），并飘出小心心。
  * 尊重 prefers-reduced-motion；移动端隐藏（见 globals.css）。
  */
 
@@ -24,6 +26,18 @@ const TIPS = [
   "噗——喷个水柱给你加油！",
 ];
 
+// 情侣视角台词：把小羊小猪牵进来
+const LOVE_TIPS = [
+  "嘘——我听见小羊的心跳，在说小猪的名字~",
+  "小羊让我转告你：我的世界里，猪猪永远是第一优先级！",
+  "磕到了磕到了！小羊和小猪也太甜了吧！",
+  "主人，今天的喜欢，记得说给小猪听哦~",
+  "我帮你在深海里，守着这份甜甜的恋爱！",
+  "小羊的温柔 + 小猪的可爱 = 满分组合！",
+  "嗅嗅……今天的风，都是恋爱的味道！",
+  "噜噜噜，深海告白小助手，随时待命！",
+];
+
 const FRAMES = {
   idle: "https://aka.doubaocdn.com/s/fTho2zYBMM",
   blink: "https://aka.doubaocdn.com/s/QvAn3R01tl",
@@ -35,6 +49,8 @@ type FrameKey = keyof typeof FRAMES;
 export default function WhaleGirl() {
   const [frame, setFrame] = useState<FrameKey>("idle");
   const [tip, setTip] = useState<string | null>(null);
+  const [isLoveTip, setIsLoveTip] = useState(false);
+  const [heartKey, setHeartKey] = useState(0);
   const [hidden, setHidden] = useState(false);
   // 拖拽后的左上角位置；null 表示未拖拽，走 CSS 的 right/bottom 定位
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
@@ -55,12 +71,29 @@ export default function WhaleGirl() {
   }, []);
 
   const showTip = useCallback(
-    (text: string) => {
+    (text: string, love = false) => {
       setTip(text);
+      setIsLoveTip(love);
+      if (love) setHeartKey((k) => k + 1); // 换 key 让小心心动画重放
       later(() => setTip(null), 4600);
     },
     [later],
   );
+
+  // 台词选择：65% 情侣池，35% 鲸鱼娘日常池；情侣池里偶尔转述小羊的情话
+  const pickTip = useCallback(() => {
+    if (Math.random() < 0.65) {
+      if (Math.random() < 0.35) {
+        const q = LOVE_QUOTES[Math.floor(Math.random() * LOVE_QUOTES.length)];
+        return { text: `小羊说：${q}`, love: true };
+      }
+      return {
+        text: LOVE_TIPS[Math.floor(Math.random() * LOVE_TIPS.length)],
+        love: true,
+      };
+    }
+    return { text: TIPS[Math.floor(Math.random() * TIPS.length)], love: false };
+  }, []);
 
   // 眨眼：1.6s 后回到静止
   const blink = useCallback(() => {
@@ -93,16 +126,22 @@ export default function WhaleGirl() {
     };
     scheduleBlink();
 
-    // 随机台词：每 2 分钟一条
-    const tipInterval = setInterval(() => {
-      showTip(TIPS[Math.floor(Math.random() * TIPS.length)]);
-    }, 120000);
+    // 随机台词：每 45~90 秒一条（含情侣互动）
+    let tipTimer: ReturnType<typeof setTimeout>;
+    const scheduleTip = () => {
+      tipTimer = setTimeout(() => {
+        const t = pickTip();
+        showTip(t.text, t.love);
+        scheduleTip();
+      }, 45000 + Math.random() * 45000);
+      timers.current.push(tipTimer);
+    };
+    scheduleTip();
 
     return () => {
       clearTimers();
-      clearInterval(tipInterval);
     };
-  }, [blink, later, showTip]);
+  }, [blink, later, pickTip, showTip]);
 
   const onPointerDown = (e: React.PointerEvent) => {
     drag.current = { px: e.clientX, py: e.clientY, x: 0, y: 0, moved: false };
@@ -134,7 +173,8 @@ export default function WhaleGirl() {
     drag.current = null;
     // 只有未被判定为拖拽的点击才互动：弹台词 + 挥手
     if (d && !d.moved) {
-      showTip(TIPS[Math.floor(Math.random() * TIPS.length)]);
+      const t = pickTip();
+      showTip(t.text, t.love);
       wave();
     }
     if (e.currentTarget.hasPointerCapture(e.pointerId)) {
@@ -193,7 +233,21 @@ export default function WhaleGirl() {
       >
         ×
       </div>
-      {tip && <div className="whale-tip">{tip}</div>}
+      {tip && (
+        <div className={`whale-tip ${isLoveTip ? "whale-tip-love" : ""}`}>
+          {isLoveTip && (
+            <span key={heartKey} className="whale-heart whale-heart-1" aria-hidden>
+              💗
+            </span>
+          )}
+          {isLoveTip && (
+            <span key={`${heartKey}-2`} className="whale-heart whale-heart-2" aria-hidden>
+              💕
+            </span>
+          )}
+          {tip}
+        </div>
+      )}
       <div className="whale-bobber">
         <div className="whale-stage" style={{ "--tilt": `${tilt}deg` } as CSSProperties}>
           {(Object.keys(FRAMES) as FrameKey[]).map((k) => (
