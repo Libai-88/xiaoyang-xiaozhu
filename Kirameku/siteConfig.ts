@@ -12,7 +12,7 @@ export const siteConfig = {
 
   // 背景设置
   useGradient: false,
-  themeColors: ["#a18cd1", "#fbc2eb", "#a1c4fd", "#c2e9fb"],
+  themeColors: ["#a18cd1", "#fbc2eb", "#60a5fa", "#22d3ee"],
   bgImages: [
     "/images/1.webp",
     "/images/42.webp",

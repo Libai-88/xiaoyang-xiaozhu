@@ -12,8 +12,12 @@ export default function Aurora() {
         style={{ animationDelay: "-6s" }}
       />
       <div
-        className="aurora-blob bottom-[-18%] left-[12%] h-[50vw] w-[50vw] min-h-[320px] min-w-[320px] bg-sky-400/20 dark:bg-sky-500/10"
+        className="aurora-blob bottom-[-18%] left-[12%] h-[50vw] w-[50vw] min-h-[320px] min-w-[320px] bg-cyan-400/20 dark:bg-cyan-500/15"
         style={{ animationDelay: "-12s" }}
+      />
+      <div
+        className="aurora-blob bottom-[6%] right-[4%] h-[34vw] w-[34vw] min-h-[220px] min-w-[220px] bg-sky-400/20 dark:bg-sky-500/10"
+        style={{ animationDelay: "-8s" }}
       />
       <div
         className="aurora-blob top-[30%] left-[35%] h-[36vw] w-[36vw] min-h-[240px] min-w-[240px] bg-pink-400/15 dark:bg-pink-500/10"
