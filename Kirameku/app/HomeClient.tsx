@@ -31,6 +31,7 @@ const LoveTerminal = dynamic(() => import("@/components/love/LoveTerminal"), { s
 const DailyUnlock = dynamic(() => import("@/components/love/DailyUnlock"), { ssr: false, loading: () => smallPlaceholder });
 const SecretWall = dynamic(() => import("@/components/love/SecretWall"), { ssr: false, loading: () => smallPlaceholder });
 const LoveMap = dynamic(() => import("@/components/love/LoveMap"), { ssr: false, loading: () => <div className="rounded-3xl bg-white/20 dark:bg-slate-800/30 backdrop-blur-md border border-white/30 animate-pulse min-h-[340px]" /> });
+const LoveAdmin = dynamic(() => import("@/components/love/LoveAdmin"), { ssr: false });
 
 export default function HomeClient({
   postCount,
@@ -157,6 +158,9 @@ export default function HomeClient({
           </div>
         </Reveal>
       </main>
+
+      {/* 站内管理入口（管理密码模式，浮动按钮） */}
+      <LoveAdmin />
     </div>
   );
 }
