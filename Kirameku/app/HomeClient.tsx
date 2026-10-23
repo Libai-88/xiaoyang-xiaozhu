@@ -24,6 +24,13 @@ const SiteDashboard = dynamic(() => import("@/components/widgets/SiteDashboard")
 const LoveCounter = dynamic(() => import("@/components/love/LoveCounter"), { ssr: false, loading: () => smallPlaceholder });
 const LoveNote = dynamic(() => import("@/components/love/LoveNote"), { ssr: false, loading: () => smallPlaceholder });
 const MeetProgress = dynamic(() => import("@/components/love/MeetProgress"), { ssr: false, loading: () => smallPlaceholder });
+const CouplesQuiz = dynamic(() => import("@/components/love/CouplesQuiz"), { ssr: false, loading: () => smallPlaceholder });
+const LoveEvents = dynamic(() => import("@/components/love/LoveEvents"), { ssr: false, loading: () => smallPlaceholder });
+const Wishlist = dynamic(() => import("@/components/love/Wishlist"), { ssr: false, loading: () => smallPlaceholder });
+const LoveTerminal = dynamic(() => import("@/components/love/LoveTerminal"), { ssr: false, loading: () => smallPlaceholder });
+const DailyUnlock = dynamic(() => import("@/components/love/DailyUnlock"), { ssr: false, loading: () => smallPlaceholder });
+const SecretWall = dynamic(() => import("@/components/love/SecretWall"), { ssr: false, loading: () => smallPlaceholder });
+const LoveMap = dynamic(() => import("@/components/love/LoveMap"), { ssr: false, loading: () => <div className="rounded-3xl bg-white/20 dark:bg-slate-800/30 backdrop-blur-md border border-white/30 animate-pulse min-h-[340px]" /> });
 
 export default function HomeClient({
   postCount,
@@ -103,6 +110,43 @@ export default function HomeClient({
             <div className="min-h-[180px]">
               <MeetProgress />
             </div>
+          </div>
+        </Reveal>
+
+        {/* 情侣空间 7 件套 · 第 1 行：问答 / 纪念日 / 愿望清单 */}
+        <Reveal delay={0.2}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 w-full items-stretch">
+            <div className="min-h-[280px]">
+              <CouplesQuiz />
+            </div>
+            <div className="min-h-[280px]">
+              <LoveEvents />
+            </div>
+            <div className="min-h-[280px]">
+              <Wishlist />
+            </div>
+          </div>
+        </Reveal>
+
+        {/* 情侣空间 7 件套 · 第 2 行：终端 / 解锁信 / 悄悄话 */}
+        <Reveal delay={0.22}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 w-full items-stretch">
+            <div className="min-h-[260px]">
+              <LoveTerminal />
+            </div>
+            <div className="min-h-[260px]">
+              <DailyUnlock />
+            </div>
+            <div className="min-h-[260px]">
+              <SecretWall />
+            </div>
+          </div>
+        </Reveal>
+
+        {/* 情侣空间 7 件套 · 第 3 行：一起去过的地方 */}
+        <Reveal delay={0.24}>
+          <div className="w-full min-h-[340px]">
+            <LoveMap />
           </div>
         </Reveal>
 
