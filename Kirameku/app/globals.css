@@ -487,3 +487,101 @@ body.anim-light .whale-tip {
   animation: meteor-fall linear infinite;
   will-change: transform, opacity;
 }
+
+/* ========== 情侣空间小彩蛋 ========== */
+
+/* 心动计数器：小羊小猪上下轻跳 */
+@keyframes love-bounce {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  30% { transform: translateY(-5px) rotate(3deg); }
+  60% { transform: translateY(-2px) rotate(-2deg); }
+}
+
+.love-bounce {
+  display: inline-block;
+  animation: love-bounce 2.2s ease-in-out infinite;
+}
+
+.love-bounce-delay {
+  display: inline-block;
+  animation: love-bounce 2.2s ease-in-out 0.4s infinite;
+}
+
+/* 爱心心跳 */
+@keyframes love-beat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.18); }
+  30% { transform: scale(0.96); }
+  45% { transform: scale(1.12); }
+  60% { transform: scale(1); }
+}
+
+.love-beat {
+  display: inline-block;
+  animation: love-beat 1.6s ease-in-out infinite;
+}
+
+.love-beat-delay {
+  animation: love-beat 1.6s ease-in-out 0.8s infinite;
+}
+
+/* 双向奔赴：小羊小猪相向而行 */
+@keyframes meet-walk {
+  0%, 100% { transform: translateX(0); }
+  22% { transform: translateX(0); }
+  38% { transform: translateX(48%); }
+  50% { transform: translateX(48%); }
+  62% { transform: translateX(0); }
+}
+
+@keyframes meet-walk-reverse {
+  0%, 100% { transform: translateX(0) scaleX(-1); }
+  22% { transform: translateX(0) scaleX(-1); }
+  38% { transform: translateX(-48%) scaleX(-1); }
+  50% { transform: translateX(-48%) scaleX(-1); }
+  62% { transform: translateX(0) scaleX(-1); }
+}
+
+/* 相遇时爱心迸发（周期与步行同步，仅在相遇瞬间显现） */
+@keyframes meet-heart-pop {
+  0%, 34% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+  40% { opacity: 1; transform: translate(-50%, -50%) scale(1.25); }
+  46% { opacity: 1; transform: translate(-50%, -50%) scale(0.95); }
+  52% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+  58% { opacity: 0; transform: translate(-50%, -50%) scale(1.4); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+}
+
+.meet-runner {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  will-change: transform;
+}
+
+.meet-sheep {
+  left: 4%;
+  animation: meet-walk 7s ease-in-out infinite;
+}
+
+.meet-pig {
+  right: 4%;
+  animation: meet-walk-reverse 7s ease-in-out infinite;
+}
+
+.meet-heart {
+  animation: meet-heart-pop 7s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* 减少动态效果时停用情侣动画 */
+@media (prefers-reduced-motion: reduce) {
+  .love-bounce,
+  .love-bounce-delay,
+  .love-beat,
+  .love-beat-delay,
+  .meet-runner,
+  .meet-heart {
+    animation: none !important;
+  }
+}

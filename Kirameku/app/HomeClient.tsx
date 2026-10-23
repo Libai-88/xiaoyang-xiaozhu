@@ -21,6 +21,9 @@ const LatestChatterCarousel = dynamic(() => import("@/components/home/LatestChat
 const PhotoWallPreview = dynamic(() => import("@/components/home/PhotoWallPreview"), { ssr: false, loading: () => placeholder });
 const DogDiary = dynamic(() => import("@/components/home/DogDiary"), { ssr: false, loading: () => smallPlaceholder });
 const SiteDashboard = dynamic(() => import("@/components/widgets/SiteDashboard"), { ssr: false, loading: () => smallPlaceholder });
+const LoveCounter = dynamic(() => import("@/components/love/LoveCounter"), { ssr: false, loading: () => smallPlaceholder });
+const LoveNote = dynamic(() => import("@/components/love/LoveNote"), { ssr: false, loading: () => smallPlaceholder });
+const MeetProgress = dynamic(() => import("@/components/love/MeetProgress"), { ssr: false, loading: () => smallPlaceholder });
 
 export default function HomeClient({
   postCount,
@@ -84,6 +87,21 @@ export default function HomeClient({
                   <DogDiary />
                 </div>
               </div>
+            </div>
+          </div>
+        </Reveal>
+
+        {/* 情侣空间小彩蛋 */}
+        <Reveal delay={0.18}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 w-full items-stretch">
+            <div className="min-h-[180px]">
+              <LoveCounter />
+            </div>
+            <div className="min-h-[180px]">
+              <LoveNote />
+            </div>
+            <div className="min-h-[180px]">
+              <MeetProgress />
             </div>
           </div>
         </Reveal>
