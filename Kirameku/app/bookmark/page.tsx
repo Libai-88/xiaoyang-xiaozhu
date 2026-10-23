@@ -33,6 +33,11 @@ const FALLBACK_CATEGORIES: BookmarkCategory[] = [
       { id: -14, category_id: -1, name: "腾讯元宝", url: "https://yuanbao.tencent.com/", icon: "", description: "腾讯系 AI 助手", platforms: ["Web", "Mobile"], sort: 3, created_at: "" },
       { id: -15, category_id: -1, name: "即梦 AI", url: "https://jimeng.jianying.com/", icon: "", description: "AI 生图生视频，一起玩创作", platforms: ["Web", "Mobile"], sort: 4, created_at: "" },
       { id: -16, category_id: -1, name: "秘塔 AI 搜索", url: "https://metaso.cn/", icon: "", description: "没有广告的 AI 搜索，查啥都清爽", platforms: ["Web"], sort: 5, created_at: "" },
+      { id: -17, category_id: -1, name: "可灵 AI", url: "https://klingai.com/", icon: "", description: "快手家的 AI 视频，一起生成小短片", platforms: ["Web", "Mobile"], sort: 6, created_at: "" },
+      { id: -18, category_id: -1, name: "文心一言", url: "https://yiyan.baidu.com/", icon: "", description: "百度的 AI 助手，写写画画都行", platforms: ["Web", "Mobile"], sort: 7, created_at: "" },
+      { id: -19, category_id: -1, name: "智谱清言", url: "https://chatglm.cn/", icon: "", description: "清华系 AI 助手，科技感拉满", platforms: ["Web", "Mobile"], sort: 8, created_at: "" },
+      { id: -20, category_id: -1, name: "讯飞星火", url: "https://xinghuo.xfyun.cn/", icon: "", description: "老牌国产 AI，语音转写很能打", platforms: ["Web", "Mobile"], sort: 9, created_at: "" },
+      { id: -21, category_id: -1, name: "扣子 Coze", url: "https://www.coze.cn/", icon: "", description: "自己搭 AI 机器人，好玩又实用", platforms: ["Web"], sort: 10, created_at: "" },
     ],
   },
   {
