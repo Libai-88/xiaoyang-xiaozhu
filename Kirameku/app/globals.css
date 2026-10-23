@@ -631,3 +631,198 @@ body.anim-light .whale-tip {
 body.whale-reduced .whale-heart {
   animation: none;
 }
+
+/* ========== 情侣空间 7 件套（Quiz/Events/Wishlist/Terminal/Unlock/Map/Secret） ========== */
+
+/* 通用卡片：与现有 love 组件毛玻璃风格一致 */
+.love-card {
+  height: 100%;
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
+  padding: 1.25rem;
+  overflow: hidden;
+  transition: background-color 0.7s, border-color 0.7s;
+}
+.dark .love-card {
+  background: rgba(30, 41, 59, 0.5);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.love-card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #e11d48;
+}
+.dark .love-card-title {
+  color: #fda4af;
+}
+
+.love-btn {
+  border-radius: 9999px;
+  padding: 0.5rem 1.1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #fb7185, #f43f5e);
+  box-shadow: 0 6px 16px -6px rgba(244, 63, 94, 0.5);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.love-btn:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 8px 20px -6px rgba(244, 63, 94, 0.6);
+}
+.love-btn:active {
+  transform: scale(0.97);
+}
+
+/* 问答选项 */
+.love-option {
+  width: 100%;
+  text-align: left;
+  border-radius: 1rem;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.85rem;
+  color: #475569;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1.5px solid rgba(226, 232, 240, 0.9);
+  transition: all 0.2s;
+}
+.dark .love-option {
+  color: #cbd5e1;
+  background: rgba(51, 65, 85, 0.45);
+  border-color: rgba(100, 116, 139, 0.4);
+}
+.love-option:hover:not(:disabled) {
+  border-color: #fb7185;
+  transform: translateX(2px);
+}
+.love-option-right {
+  border-color: #34d399 !important;
+  background: rgba(52, 211, 153, 0.15) !important;
+  color: #059669 !important;
+}
+.love-option-wrong {
+  border-color: #fb7185 !important;
+  background: rgba(251, 113, 133, 0.15) !important;
+  color: #e11d48 !important;
+}
+.love-option-dim {
+  opacity: 0.45;
+}
+
+/* 爱心雨（答题完成彩蛋） */
+@keyframes love-rain-fall {
+  0%   { transform: translateY(-12vh) rotate(0deg); opacity: 0; }
+  12%  { opacity: 1; }
+  100% { transform: translateY(48vh) rotate(360deg); opacity: 0; }
+}
+.love-rain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.love-rain span {
+  position: absolute;
+  top: 0;
+  font-size: 1.4rem;
+  animation: love-rain-fall 3.2s linear infinite;
+}
+
+/* 愿望清单 */
+.love-wish-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  text-align: left;
+  border-radius: 0.9rem;
+  padding: 0.45rem 0.7rem;
+  transition: background 0.2s;
+}
+.love-wish-item:hover {
+  background: rgba(251, 113, 133, 0.08);
+}
+.love-wish-done {
+  opacity: 0.55;
+}
+.love-wish-done span:last-child {
+  text-decoration: line-through;
+}
+
+/* 勾选完成冒爱心 */
+@keyframes wish-burst-rise {
+  0%   { transform: translateY(0) scale(0.6); opacity: 0; }
+  25%  { opacity: 1; transform: translateY(-6px) scale(1.15); }
+  100% { transform: translateY(-34px) scale(1); opacity: 0; }
+}
+.love-wish-burst {
+  position: fixed;
+  left: 50%;
+  top: 55%;
+  font-size: 2rem;
+  pointer-events: none;
+  z-index: 60;
+  animation: wish-burst-rise 1.1s ease-out forwards;
+}
+
+/* 恋爱终端 */
+.love-terminal {
+  background: rgba(15, 23, 42, 0.88) !important;
+  border-color: rgba(148, 163, 184, 0.25) !important;
+}
+.dark .love-terminal {
+  background: rgba(2, 6, 23, 0.9) !important;
+}
+
+@keyframes love-cursor-blink {
+  0%, 45% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.love-terminal-cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.05em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: #fb7185;
+  animation: love-cursor-blink 1s step-end infinite;
+}
+
+/* 信件展开淡入 */
+@keyframes love-letter-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.love-letter-in {
+  animation: love-letter-in 0.45s ease-out;
+}
+
+/* 地图 */
+.love-map-icon {
+  background: transparent;
+  border: none;
+}
+.love-map-icon div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.leaflet-container {
+  font-family: inherit;
+}
+
+/* 滚动条美化 */
+.love-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+.love-scroll::-webkit-scrollbar-thumb {
+  background: rgba(244, 63, 94, 0.35);
+  border-radius: 9999px;
+}
+.love-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
