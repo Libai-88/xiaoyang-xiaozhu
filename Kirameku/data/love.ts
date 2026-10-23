@@ -108,8 +108,8 @@ export const LOVE_EVENTS: LoveEvent[] = [
   { id: "together", name: "在一起", emoji: "💑", date: "2025-12-14", repeat: false },
   { id: "confess", name: "小羊表白", emoji: "💌", date: "", repeat: false },
   { id: "trip", name: "第一次旅行", emoji: "✈️", date: "", repeat: false },
-  { id: "birthday-pig", name: "小猪生日", emoji: "🎂", date: "", repeat: true },
-  { id: "birthday-sheep", name: "小羊生日", emoji: "🎂", date: "", repeat: true },
+  { id: "birthday-pig", name: "小猪生日", emoji: "🎂", date: "2026-09-13", repeat: true },
+  { id: "birthday-sheep", name: "小羊生日", emoji: "🎂", date: "2026-08-05", repeat: true },
 ];
 
 // ========== 愿望清单（Wishlist） ==========
@@ -204,4 +204,4 @@ export const MAP_PLACES_INIT = [
 
 // ========== 悄悄话密码（SecretWall） ==========
 // 默认密码请主人修改为自定义值，如 "" 表示关闭该功能
-export const SECRET_PASSWORD = "iloveyou-pig";
+export const SECRET_PASSWORD = "5201314";
