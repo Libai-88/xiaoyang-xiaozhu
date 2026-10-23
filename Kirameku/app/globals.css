@@ -170,23 +170,47 @@ input, textarea, [contenteditable], .prose, code, pre {
   cursor: grabbing;
 }
 
-.whale-girl img {
+/* 浮动层：呼吸式上下浮动 + 轻摆 */
+.whale-bobber {
   width: 100%;
-  height: auto;
-  display: block;
-  pointer-events: none;
-  filter: drop-shadow(0 8px 18px rgba(30, 64, 175, 0.28));
-  transition: transform 0.3s ease;
   animation: whale-bob 4.5s ease-in-out infinite;
-}
-
-.whale-girl:hover img {
-  transform: scale(1.05);
 }
 
 @keyframes whale-bob {
   0%, 100% { transform: translateY(0) rotate(-1.2deg); }
-  50% { transform: translateY(-8px) rotate(1.6deg); }
+  30% { transform: translateY(-6px) rotate(1.1deg); }
+  55% { transform: translateY(-9px) rotate(0.6deg); }
+  80% { transform: translateY(-3px) rotate(-0.6deg); }
+}
+
+/* 倾斜层：跟随鼠标左右轻倾（transform 由内联 --tilt 驱动） */
+.whale-stage {
+  position: relative;
+  width: 100%;
+  transform: rotate(var(--tilt, 0deg)) scale(1);
+  transition: transform 0.25s ease;
+  will-change: transform;
+}
+
+.whale-girl:hover .whale-stage {
+  transform: rotate(var(--tilt, 0deg)) scale(1.04);
+}
+
+/* 表情帧：绝对叠放，仅 active 帧显形并撑起高度，淡入淡出切换 */
+.whale-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: auto;
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 18px rgba(30, 64, 175, 0.28));
+  transition: opacity 0.35s ease;
+}
+
+.whale-frame.active {
+  position: relative;
+  opacity: 1;
 }
 
 /* 台词气泡 */
@@ -285,7 +309,7 @@ input, textarea, [contenteditable], .prose, code, pre {
 }
 
 /* 减少动态效果时停用浮动 */
-body.whale-reduced .whale-girl img {
+body.whale-reduced .whale-bobber {
   animation: none;
 }
 
